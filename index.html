@@ -114,14 +114,17 @@
 		top: -100%;
 	}
 	.splash-screen-img {
-		min-height: 100%;
-		min-width: 100%;
+/*		height: 100%;
+		width: 100%;*/:
+		border: 8px solid red;
 	}
 	.blur {
 		filter: blur(1px);
 	}
 	.vignette {
 		width: 100%;
+		position:relative;
+		top: 0;
 		height: 100%;
 		box-shadow: inset 0 0 100px black;
 	}
@@ -130,17 +133,62 @@
 <script src="js/jquery-3.4.1.min.js"></script>
 <script>
 var adjustBackground = function() {
-	// if the image is larger than the screen center it
+	var $viewport = $(window);
+	var $img = $(".splash-screen-img");
+	var viewportWidth = screen.width;
+	var viewportHeight = screen.height;
+	var viewportAspect = viewportWidth/viewportHeight;
+	var imgWidth = $img.width();
+	var imgHeight = $img.height();
+	var imgAspect = imgWidth/imgHeight; 
+	console.log(imgAspect);	
+	// If the image is larger than the screen, scale it down until it's 
+	// just larger than viewport. Then center it.
+	if (imgWidth > viewportWidth && imgHeight > viewportHeight) {
+		// determine what set of dimensions are the limiting factor (ie. smaller)
+		if (imgAspect < viewportAspect) {
+			// The view port is wider compared to its height than the image is
+			// meaning the width is the limiting dimension.
+			// Therefore we set image width = view ports width
+			// use the aspect ratio to set the correct height
+			console.log("viewport is wider than image");
+			console.log("setting width to: " + viewportWidth);
+			console.log("setting height to: " + imgAspect*viewportWidth);
+			$img.width(viewportWidth);
+			$img.height(imgAspect*viewportWidth);
+		} else {
+			// The image is more wide than it is tall compared to the viewport so we adjust the height
+			// to fit
+			console.log("image is wider than viewport");
+			console.log("setting width to: " + viewportHeight*imgAspect);
+			console.log("setting height to: " + viewportHeight);
+			$img.height(viewportHeight);
+			$img.width(viewportHeight*imgAspect);
+		}
+		centerImage($img);
+	}
 	// if the image is too small, perseve the aspect ratio and scale up
 	// once both the height and the width are large enough, center the image
+}
+var centerImage = function($img) {
+	var overlapWidth = $img.width() - screen.width;
+	var overlapHeight = $img.height() - screen.height;
+
+	// image overlaps viewport, move the image back 
+	// half the length of the overlap
+	$img.css({
+		position: "relative",
+		right: overlapWidth/2,
+		bottom: overlapHeight/2 
+	}); 
+
 }
 </script>
 <body id="body">
 <div class="container">
 	<div id="splash-screen">
-		<div class="vignette">
-			<img class="splash-screen-img blur" src="images/splash-screen.jpg"> 
-		</div>
+		<img class="splash-screen-img blur" src="images/splash-screen.jpg"> 
+		<div class="vignette"></div>
 		<div class="splash-screen-text">
 			<div id="clock">12:48</div>	
 		</div>
