@@ -144,7 +144,7 @@ var adjustBackground = function() {
 	console.log(imgAspect);	
 	// If the image is larger than the screen, scale it down until it's 
 	// just larger than viewport. Then center it.
-	if (imgWidth > viewportWidth && imgHeight > viewportHeight) {
+//	if (imgWidth > viewportWidth && imgHeight > viewportHeight) {
 		// determine what set of dimensions are the limiting factor (ie. smaller)
 		if (imgAspect < viewportAspect) {
 			// The view port is wider compared to its height than the image is
@@ -153,9 +153,9 @@ var adjustBackground = function() {
 			// use the aspect ratio to set the correct height
 			console.log("viewport is wider than image");
 			console.log("setting width to: " + viewportWidth);
-			console.log("setting height to: " + imgAspect*viewportWidth);
+			console.log("setting height to: " + viewportWidth/imgAspect);
 			$img.width(viewportWidth);
-			$img.height(imgAspect*viewportWidth);
+			$img.height(viewportWidth/imgAspect);
 		} else {
 			// The image is more wide than it is tall compared to the viewport so we adjust the height
 			// to fit
@@ -164,9 +164,10 @@ var adjustBackground = function() {
 			console.log("setting height to: " + viewportHeight);
 			$img.height(viewportHeight);
 			$img.width(viewportHeight*imgAspect);
+			console.log("resulting aspect ratio: " + $img.width()/$img.height());
 		}
 		centerImage($img);
-	}
+//	}
 	// if the image is too small, perseve the aspect ratio and scale up
 	// once both the height and the width are large enough, center the image
 }
@@ -174,6 +175,7 @@ var centerImage = function($img) {
 	var overlapWidth = $img.width() - screen.width;
 	var overlapHeight = $img.height() - screen.height;
 
+	console.log("overlapwidth: " + overlapWidth + " overlapHeight " + overlapHeight);
 	// image overlaps viewport, move the image back 
 	// half the length of the overlap
 	$img.css({
