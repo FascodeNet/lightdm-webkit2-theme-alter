@@ -104,11 +104,7 @@
 		overflow: hidden;
 	}
 	#clock {
-		margin-top: 200pt; 
-		color: white;
-		text-align: center;
-		font-size: 60pt;
-		font-family: "Noto Sans";
+
 	}
 	.splash-screen-text {
 		position: relative;
@@ -133,6 +129,7 @@
     </style>
 </head>
 <script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/moment-with-locales.js"></script>
 <script>
 
 /**
@@ -146,7 +143,6 @@ var adjustBackground = function($img) {
 	var imgWidth = $img.width();
 	var imgHeight = $img.height();
 	var imgAspect = imgWidth/imgHeight; 
-	console.log(imgAspect);	
 	
 	/* First determine what is 
 	   the limiting factor (ie. if the image is wider, then the height is
@@ -181,7 +177,17 @@ var centerImage = function($img) {
 	}); 
 
 }
-var default_options = {
+
+
+
+var usr_opt = {
+//	"clock": {
+//		"css": {
+//			"color": "black"
+//		}
+//	}
+};
+var def_opt = {
 	"splash-screen": {
 		"fit": true,
 		"filter": true,
@@ -189,16 +195,44 @@ var default_options = {
 	},
 	"clock": {
 		"format": "HH:MM",
-		"size" : "60pt"
+		"css": {	
+			"color": "white",
+			"text-align": "center",
+			"font-size": "60pt",	
+			"font-family": "Noto Sans"
+		}
 	}
-}
+};
+var eff_opt = {};
+var initClock = function() {
+	var $clock = $("#clock");	
 
-$(document).ready(function() {
+	if (!eff_opt["clock"]) {
+		$clock.hide();
+		return;
+	}
+
+	// apply css styles
+	$clock.css(eff_opt.clock.css);
+
+	if (eff_opt.clock.css.color) {
+
+	}
+
+}
+var init = function() {
 	$('.splash-screen-img').each(function () {
 		adjustBackground($(this));
 	});
-	// set user options	
 
+	// copy the default options into the effective
+	$.extend(true, eff_opt, def_opt);		
+	$.extend(true, eff_opt, usr_opt);
+	console.log(eff_opt);			
+	initClock();
+}
+$(document).ready(function() {
+	init();	
 });
 
 </script>
