@@ -101,6 +101,7 @@
 		height: 100%;
 		position: absolute;
 		z-index: 999;
+		overflow: hidden;
 	}
 	#clock {
 		margin-top: 200pt; 
@@ -119,22 +120,26 @@
 		border: 8px solid red;
 	}
 	.blur {
-		filter: blur(1px);
+		filter: blur(8px) contrast(127%) brightness(140%);
 	}
 	.vignette {
 		width: 100%;
-		position:relative;
-		top: 0;
 		height: 100%;
+		position: absolute;
+		top: 0;
 		box-shadow: inset 0 0 100px black;
+		z-index: 2;
 	}
     </style>
 </head>
 <script src="js/jquery-3.4.1.min.js"></script>
 <script>
-var adjustBackground = function() {
-	var $viewport = $(window);
-	var $img = $(".splash-screen-img");
+
+/**
+ * Scale an image up or down until it's larger than or equal to the viewport 
+ * and then center it.
+ */
+var adjustBackground = function($img) {
 	var viewportWidth = screen.width;
 	var viewportHeight = screen.height;
 	var viewportAspect = viewportWidth/viewportHeight;
@@ -142,34 +147,25 @@ var adjustBackground = function() {
 	var imgHeight = $img.height();
 	var imgAspect = imgWidth/imgHeight; 
 	console.log(imgAspect);	
-	// If the image is larger than the screen, scale it down until it's 
-	// just larger than viewport. Then center it.
-//	if (imgWidth > viewportWidth && imgHeight > viewportHeight) {
-		// determine what set of dimensions are the limiting factor (ie. smaller)
+	
+	/* First determine what is 
+	   the limiting factor (ie. if the image is wider, then the height is
+	   is the limiting factor and needs to be adjustested */
 		if (imgAspect < viewportAspect) {
-			// The view port is wider compared to its height than the image is
-			// meaning the width is the limiting dimension.
-			// Therefore we set image width = view ports width
-			// use the aspect ratio to set the correct height
-			console.log("viewport is wider than image");
-			console.log("setting width to: " + viewportWidth);
-			console.log("setting height to: " + viewportWidth/imgAspect);
+			/* The view port is wider compared to its height than
+			   the image is compared to the image height  meaning
+			   the width is the limiting dimension. Therefore we
+			   set image width = view ports width use the aspect
+			   ratio to set the correct height */
 			$img.width(viewportWidth);
 			$img.height(viewportWidth/imgAspect);
 		} else {
-			// The image is more wide than it is tall compared to the viewport so we adjust the height
-			// to fit
-			console.log("image is wider than viewport");
-			console.log("setting width to: " + viewportHeight*imgAspect);
-			console.log("setting height to: " + viewportHeight);
+			/* The image is wider than it is tall compared to the
+			   viewport so we adjust the to fit */
 			$img.height(viewportHeight);
 			$img.width(viewportHeight*imgAspect);
-			console.log("resulting aspect ratio: " + $img.width()/$img.height());
 		}
 		centerImage($img);
-//	}
-	// if the image is too small, perseve the aspect ratio and scale up
-	// once both the height and the width are large enough, center the image
 }
 var centerImage = function($img) {
 	var overlapWidth = $img.width() - screen.width;
@@ -185,6 +181,26 @@ var centerImage = function($img) {
 	}); 
 
 }
+var default_options = {
+	"splash-screen": {
+		"fit": true,
+		"filter": true,
+		"vignette": true
+	},
+	"clock": {
+		"format": "HH:MM",
+		"size" : "60pt"
+	}
+}
+
+$(document).ready(function() {
+	$('.splash-screen-img').each(function () {
+		adjustBackground($(this));
+	});
+	// set user options	
+
+});
+
 </script>
 <body id="body">
 <div class="container">
