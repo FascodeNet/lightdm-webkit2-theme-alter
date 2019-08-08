@@ -169,13 +169,16 @@ class LoginManager {
 			}
 		};
 		this.eff_opt = {};
+		this.clock = setInterval(() => {
+			$(this).trigger("tick");		
+		}, 500);
 	}
 
 	init() {
 		// initilize golbal values
 		this.$vignette = $("#vignette");
 		this.$ss_clock = $("#clock");
-
+		
 		// adjust each background image
 		let $imgs = $('.splash-screen-img');
 		let self = this;
@@ -186,7 +189,6 @@ class LoginManager {
 		// copy the default options into the effective
 		$.extend(true, this.eff_opt, this.def_opt);		
 		$.extend(true, this.eff_opt, this.usr_opt);
-		console.log(this);			
 
 		let ss = this.eff_opt["splash-screen"];
 		if (typeof ss == "object") {
@@ -197,6 +199,8 @@ class LoginManager {
 			if (typeof ss.clock == "object")
 				this.initClock(this.$ss_clock, ss.clock);
 		}
+		console.log("init done");
+		$(this).trigger("ready");
 	}
 
 	initClock($clock, opts) {
@@ -259,17 +263,45 @@ class LoginManager {
 			right: overlapWidth/2,
 			bottom: overlapHeight/2 
 		}); 
-
 	}
 
+	login(username, password, callback) {
+		// set default values
+		if (typeof lightdm == 'undefined') {
+			console.warn("Cannot attempt login without lightdm");
+			// call async so that events can be binded in cascade
+			setTimeout(() => $(this).trigger("access-deny"));
+			return;
+		}
+		username = username || lightdm.select_user; 
+		password = password || "";
+		//  session_key = session_key || lightdm.sessions[0].key;
+
+		let auth_cb = () =>  {
+                    lightdm.respond(password);
+                }
+		let auth_complete_cb = () => {
+			if (typeof callback == "function")
+				callback(lightdm.is_authenticated); 
+
+			$(this).trigger(lightdm.is_authenticated ? "access-grant" : "access-deny");
+		}
+		window.show_prompt = auth_cb; 
+		window.authentication_complete = auth_complete_cb; 
+		lightdm.authenticate(username);
+    }
 }
 
-
-
+// create singleton 
 const greeter = new LoginManager();
 
 $(document).ready(function() {
 	greeter.init();	
+	greeter.login("jay", "");
+	$(greeter).on("access-grant", () => {
+             lightdm.start_session_sync("i3");
+	}).on("access-deny", () => console.log("denied!"));
+
 });
 
 </script>
@@ -382,35 +414,13 @@ $(document).ready(function() {
     //  lightdm.respond(entry.value);
     };
 
-    function login(username, password, callback) {
-        // set default values
-        username = username || lightdm.select_user; 
-        password = password || "";
-        //  session_key = session_key || lightdm.sessions[0].key;
-
-       var auth_cb = function() {
-            lightdm.respond(password);
-        }
-       var auth_complete_cb = function() {
-            if (typeof callback == "function")
-                callback(lightdm.is_authenticated);
-        }
-        window.show_prompt = auth_cb; 
-        window.authentication_complete = auth_complete_cb; 
-
-
-        lightdm.authenticate(username);
-            
-
-    }
  
-    //TODO: make sure that lightdm is not referenced until pages has finished loading
-    setTimeout(() => login("jay", "", () => {
-        for(var x = 0; x < lightdm.sessions.length; x++){
-       window.show_message(lightdm.sessions[x].key, "info");
-    } 
-    ac("i3");           
-    }) , 10);
+//  setTimeout(() => login("jay", "", () => {
+//      for(var x = 0; x < lightdm.sessions.length; x++){
+//     window.show_message(lightdm.sessions[x].key, "info");
+//  } 
+//  ac("i3");           
+//  }) , 10);
 </script>
 </body>
 </html>
