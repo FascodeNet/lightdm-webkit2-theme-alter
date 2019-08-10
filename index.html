@@ -118,8 +118,8 @@
 	}
 	.splash-screen-img {
 /*		height: 100%;
-		width: 100%;*/:
-		border: 8px solid red;
+		width: 100%; */
+		/* border: 8px solid red; */
 	}
 	.filter{
 		filter: blur(15px) contrast(127%) brightness(80%);
@@ -169,9 +169,12 @@ class LoginManager {
 			}
 		};
 		this.eff_opt = {};
+		
+		this.splash= {};
+
 		this.clock = setInterval(() => {
 			$(this).trigger("tick");		
-		}, 500);
+		}, 100000);
 	}
 
 	init() {
@@ -199,14 +202,13 @@ class LoginManager {
 			if (typeof ss.clock == "object")
 				this.initClock(this.$ss_clock, ss.clock);
 		}
-		console.log("init done");
 		$(this).trigger("ready");
 	}
 
 	initClock($clock, opts) {
-		if (typeof opts != "object") {
+		if (typeof opts != "object")
 			return -1;
-		}
+		
 		$clock.show();
 
 		// apply css styles
@@ -214,10 +216,9 @@ class LoginManager {
 
 		// start clock
 		$clock.text(moment().format(opts.format || this.def_opt.clock.format));
-		setInterval(() => {
+		$(this).on("tick", () => {
 			$clock.text(moment().format(opts.format || this.def_opt.clock.format));
-		}, 500);
-		console.log(opts);
+		});
 	}
 	/**
 	 * Scale an image up or down until it's larger than or equal to the viewport 
