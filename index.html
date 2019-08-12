@@ -107,10 +107,10 @@
 		z-index: 999;
 		overflow: hidden;
 	}
-	#clock {
+	.clock {
 		display: none;
 	}
-	.splash-screen-content {
+	#splash-screen-content {
 		position: absolute;
 		width: 100%;
 		height: 100%;
@@ -140,13 +140,12 @@
 
 class LoginManager {
 	constructor() {
+		this.$content;
 		this.$ss_clock;
 		this.$vignette;
 		this.usr_opt = {
 			"splash-screen":{
 				"filter": false,
-				"clock": {
-				}
 			}
 		};
 
@@ -155,17 +154,21 @@ class LoginManager {
 				"fit": true,
 				"filter": true,
 				"vignette": true,
-				"clock": {
-					"format": "LT",
-					"css": {	
-						"color": "white",
-						"text-align": "center",
+				"clock": [{
+					"format": ["h:MM", "A"],
+					"css": [{
 						"font-size": "60pt",	
+					},{
+						"font-size": "30pt"		
+					}],
+					"parent-css": {	
+						"color": "white",
 						"font-family": "Noto Sans",
+						"text-align": "center",
 						"margin-top": "calc(50vh - 90pt)",
 						"text-shadow": "rgba(0, 0, 0, 0.8) 0px 7px 10px",
-					}
-				}
+					} 
+				}]
 			}
 		};
 		this.eff_opt = {};
@@ -175,13 +178,13 @@ class LoginManager {
 		this.clock = setInterval(() => {
 			$(this).trigger("tick");		
 		}, 100000);
+		
 	}
 
 	init() {
-		// initilize golbal values
-		this.$vignette = $("#vignette");
-		this.$ss_clock = $("#clock");
-		
+		// initailize globals
+		this.$content = $("#splash-screen-content");	
+
 		// adjust each background image
 		let $imgs = $('.splash-screen-img');
 		let self = this;
@@ -195,31 +198,89 @@ class LoginManager {
 
 		let ss = this.eff_opt["splash-screen"];
 		if (typeof ss == "object") {
-			if (ss.filter == true)
+			// initilize global values if specfied in the config
+			if (ss.filter == true) {
 				$imgs.addClass("filter");	
-			if (ss.vignette == true)
-				this.$vignette.show();
-			if (typeof ss.clock == "object")
-				this.initClock(this.$ss_clock, ss.clock);
+			}
+			if (ss.vignette == true) {
+				this.splash.$vignette = $("#vignette");
+				this.splash.$vignette.show();
+			}
+			if (typeof ss.clock == "object") {
+				this.initClock(ss.clock);
+			}
+
 		}
+
+		/* trigger ready event to signigy init has completed and the
+		   login manager is ready */
 		$(this).trigger("ready");
 	}
 
-	initClock($clock, opts) {
+	/**
+	 *  Creates clock elements based on the usr config
+	 */
+	initClock(opts) {
 		if (typeof opts != "object")
 			return -1;
-		
-		$clock.show();
+		// handle arrays and a single clock object
+		if (!Array.isArray(opts))
+			opts = [opts];
 
-		// apply css styles
-		$clock.css(opts.css);
-
-		// start clock
-		$clock.text(moment().format(opts.format || this.def_opt.clock.format));
-		$(this).on("tick", () => {
-			$clock.text(moment().format(opts.format || this.def_opt.clock.format));
-		});
+		for (let i in opts) {
+			let $clock = $("<div class='clock'></div>");
+			this.$content.append($clock);
+			this.startClock($clock, opts[i]);
+		}
 	}
+	
+	/**
+	 * Applys the css specfied in the argument opts to the jQuery oboject $clock.
+	 * Subscribes the clock to a tick event 
+	 */
+	startClock($clock, opts) {
+		if (typeof opts != "object") {
+			console.error("Clock opts is not a valid object");
+			return -1;
+		}			
+		// handle multiple formats for multiple clocks on the same line
+		if(typeof opts.format == "string")
+			opts.format = [opts.format];
+
+		// ensure the format is now an array
+		if(!Array.isArray(opts.format)) {
+			console.error(`Specfied clock format is not a valid type.
+				Type can be a single string or Array.`);
+			return -1;		
+		}
+			
+		if(!Array.isArray(opts.css))
+			opts.css = [opts.css];
+		
+		for (let i in opts.format) {
+		//	if (i >= opts.css.length)
+		//		break;
+
+			let $format = $("<sub></sub>");
+			// create text field in clock
+			$clock.append($format);
+
+			// apply css styles
+			if (i < opts.css.length && typeof opts.css[i] == "object")
+				$format.css(opts.css[i]);
+
+			// start clock
+			$format.text(moment().format(opts.format[i]));
+			$(this).on("tick", () => {
+				$format.text(moment().format(opts.format[i]));
+			});
+		}
+
+		if (typeof opts["parent-css"] == "object")
+			$clock.css(opts["parent-css"]);
+		$clock.show();
+	}
+
 	/**
 	 * Scale an image up or down until it's larger than or equal to the viewport 
 	 * and then center it.
@@ -302,7 +363,6 @@ $(document).ready(function() {
 	$(greeter).on("access-grant", () => {
              lightdm.start_session_sync("i3");
 	}).on("access-deny", () => console.log("denied!"));
-
 });
 
 </script>
@@ -311,8 +371,8 @@ $(document).ready(function() {
 	<div id="splash-screen">
 		<img class="splash-screen-img" src="images/splash-screen.jpg"> 
 		<div class="vignette"></div>
-		<div class="splash-screen-content">
-			<div id="clock">12:48</div>	
+		<div id="splash-screen-content">
+			<!--<div id="clock"></div>	-->
 		</div>
 	</div>
     <div class="topBox">
