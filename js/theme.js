@@ -68,6 +68,48 @@ var centerImage =  function($img) {
 	}); 
 }
 
+class LoginManager {
+	constructor() {
+		this.use_splash = true;
+		$(document).ready(() => {
+			this.init();
+		});		
+	}
+
+	init() {
+		if (this.use_splash) {
+			this.splash = new SplashScreen();
+		}
+		$(this).trigger("ready");
+	}
+
+
+	login(username, password, callback) {
+		// set default values
+		if (typeof lightdm == 'undefined') {
+			console.warn("Cannot attempt login without lightdm");
+			// call async so that events can be binded in cascade
+			setTimeout(() => $(this).trigger("access-deny"));
+			return;
+		}
+		username = username || lightdm.select_user; 
+		password = password || "";
+		//  session_key = session_key || lightdm.sessions[0].key;
+
+		let auth_cb = () =>  {
+                    lightdm.respond(password);
+                }
+		let auth_complete_cb = () => {
+			if (typeof callback == "function")
+				callback(lightdm.is_authenticated); 
+
+			$(this).trigger(lightdm.is_authenticated ? "access-grant" : "access-deny");
+		}
+		window.show_prompt = auth_cb; 
+		window.authentication_complete = auth_complete_cb; 
+		lightdm.authenticate(username);
+    }
+}
 
 class SplashScreen {
 	constructor() {
@@ -151,7 +193,7 @@ class SplashScreen {
 		}, time, "easeInCubic", () => {
 			this.is_open = true;
 			// close the screen after 1 minute of inactivty
-			this.resetTimeout = setTimeout(() => timeout, reset_duration); 
+			this.resetTimeout = setTimeout(() => this.reset, reset_duration); 
 		});			
 	}
 	reset() {
@@ -248,8 +290,12 @@ class SplashScreen {
 
 
 }
-var ss;
-$(document).ready(() => {
-	ss = new SplashScreen();
-
+// create singleton 
+const greeter = new LoginManager();
+$(greeter).ready(function() {
+	greeter.login("jay", "");
+	$(greeter).on("access-grant", () => {
+             lightdm.start_session_sync("i3");
+	}).on("access-deny", () => console.log("denied!"));
 });
+
