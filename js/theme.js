@@ -6,19 +6,24 @@ const  DEF_OPT =
 	"vignette": true,
 	"clock": [{
 		"format": ["h:mm", "A"],
-		"css": [{
-				"font-size": "60pt",
-			},{
-				"font-size": "30pt"
-			}
-	],			
-	"parent-css": {
-		"color": "white",
-		"font-family": "Noto Sans",
-		"text-align": "center",
-		"margin-top": "calc(50vh - 90pt)",
-		"text-shadow": "rgba(0, 0, 0, 0.8) 0px 7px 10px",
-	}
+		"css": [
+			{"font-size": "60pt"},
+			{"font-size": "30pt"}
+		],
+		"parent-css": {
+			"color": "white",
+			"font-family": "Noto Sans",
+			"text-align": "center",
+			"margin-top": "calc(50vh - 90pt)",
+			"text-shadow": "rgba(0, 0, 0, 0.8) 0px 7px 10px",
+		}
+	}],
+	"html": [{ 
+		"text":"Press any key to login",
+		"css": {
+			"text-align": "center",
+			"color": "rgba(255, 255, 255, 0.5)"
+		}
 	}]
 };
 
@@ -127,6 +132,7 @@ class SplashScreen {
 			console.warn("No background images supplied for splash screen.");
 		this.$img.each((i, v) => adjustBackground($(v)));
 
+		//TODO make content loop, so objects can be added in a specified order
 		let options = this.options; // shorthand
 		if (typeof options == "object") {
 			this.is_open = false;
@@ -141,6 +147,9 @@ class SplashScreen {
 			if (typeof options.clock == "object") {
 				this.initClock(options.clock);
 			}
+			if (options.html) {
+				this.initHTML(options.html);	
+			}
 	
 		}
 
@@ -154,9 +163,15 @@ class SplashScreen {
 			this.keyHandler.call(this, e);
 		}).keypress((e) => this.keyHandler.call(this, e));
 
-		$(this).click(() => {
-		
+		this.$el.click(() => {
+			this.open();	
 		});
+	}
+
+	removeFilter() {
+		this.$img.animate({
+			
+		}, 1000);
 	}
 
 	getUserOptions() {
@@ -216,7 +231,10 @@ class SplashScreen {
 				if (this.is_open) this.close();
 				else this.open();
 				break;
-
+			default:
+				if (e.keyCode != 82 && e.keyCode != 17) // for testing
+				this.open();
+				break;
 		}
 	
 		// stop reset timeout since there has been user activity
@@ -286,6 +304,38 @@ class SplashScreen {
 			$clock.css(opts["parent-css"]);
 		console.debug($clock);
 		$clock.show();
+	}
+
+	/**
+	 * Inserts HTML specified in the user config into the splash screen
+	 * accepts plain strings and objects. String literals are interpreted as
+	 * normal text element. Objects are set using the jQuery API
+	 */
+	initHTML(opts) {
+		// handle single objects and strings
+		if (!Array.isArray(opts)) {	
+			opts = [opts];
+		}
+
+		for (let el of opts) {
+			if (typeof el == "string") {
+				let $el = $("<text>");
+				$el.text(el);
+				// create simple text element
+				this.$content.append($el);		
+			} else if (typeof el == "object") {
+				// let user specify element properites in object el
+				let $el = $("<div>");
+				for (let prop in el) {
+					$el[prop](el[prop]);
+				}
+				this.$content.append($el);
+				
+			} else {
+				console.warn("Splash screen html element is invalid type");
+			}
+		}
+
 	}
 
 
