@@ -16,7 +16,7 @@ const  DEF_OPT =
 		"color": "white",
 		"font-family": "Noto Sans",
 		"text-align": "center",
-		"margi-ntop": "calc(50vh - 90pt)",
+		"margin-top": "calc(50vh - 90pt)",
 		"text-shadow": "rgba(0, 0, 0, 0.8) 0px 7px 10px",
 	}
 	}]
@@ -72,7 +72,7 @@ var centerImage =  function($img) {
 class SplashScreen {
 	constructor() {
 		this.$el = $("#splash-screen");
-		this.$content = $(".splash-screen-content");
+		this.$content = $("#splash-screen-content");
 		this.options = this.getUserOptions();
 		this.is_open = false;	
 
@@ -147,16 +147,12 @@ class SplashScreen {
 	 * handles the key events for the splash
 	 */ 
 	keyHandler(e) {
-		let splash = this.splash;
-
 		switch (e.keyCode) {
 			case 13:
-				if (splash.enable) 	
-					splash.toggle();
+				this.toggle();
 				break;
 			case 27:
-				if (splash.enable)
-					splash.toggle();
+				this.toggle();
 				break;
 
 		}
@@ -173,9 +169,9 @@ class SplashScreen {
 			opts = [opts];
 
 		for (let i in opts) {
-			let $clock = $("<div class='clock'></div>");
-			this.$content.append($clock);
-			this.startClock($clock, opts[i]);
+			this.$clock = $("<div class='clock'></div>");
+			this.$content.append(this.$clock);
+			this.startClock(this.$clock, opts[i]);
 		}
 	}
 
@@ -221,12 +217,14 @@ class SplashScreen {
 
 		if (typeof opts["parent-css"] == "object")
 			$clock.css(opts["parent-css"]);
+		console.debug($clock);
 		$clock.show();
 	}
 
 
 }
+var ss;
 $(document).ready(() => {
-	var ss = new SplashScreen();
+	ss = new SplashScreen();
 
 });
