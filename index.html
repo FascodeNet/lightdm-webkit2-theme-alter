@@ -172,8 +172,11 @@ class LoginManager {
 			}
 		};
 		this.eff_opt = {};
-		
-		this.splash= {};
+		this.splash= {
+			enable: false,
+			$splash: null,
+			is_open: true,
+		};	
 
 		this.clock = setInterval(() => {
 			$(this).trigger("tick");		
@@ -183,6 +186,7 @@ class LoginManager {
 
 	init() {
 		// initailize globals
+		this.splash.$splash = $("#splash-screen");
 		this.$content = $("#splash-screen-content");	
 
 		// adjust each background image
@@ -198,6 +202,8 @@ class LoginManager {
 
 		let ss = this.eff_opt["splash-screen"];
 		if (typeof ss == "object") {
+			this.splash.enable = true;
+			this.splash.is_open = false;
 			// initilize global values if specfied in the config
 			if (ss.filter == true) {
 				$imgs.addClass("filter");	
@@ -210,13 +216,61 @@ class LoginManager {
 				this.initClock(ss.clock);
 			}
 
+			/* will toggle the splash screen and animate it opening and closing
+			   adds a resetTimeout function to automatically close when after user
+			   inactivity */
+			this.splash.toggle = (o_time=550, c_time=500) => {
+				if (this.splash.is_open)
+					this.splash.$splash.animate({
+						top: "0"
+					}, c_time, "swing", () => {
+						this.splash.is_open = false
+						clearTimeout(this.splash.resetTimeout);
+					});
+				else
+					this.splash.$splash.animate({
+						top: "-100%"
+					}, o_time, "swing", () => {
+						this.splash.is_open = true;
+						// close the splash screen after 1 minute of inactivty
+						this.splash.resetTimeout = setTimeout(() => {
+							if (this.splash.is_open == true) {
+								this.splash.toggle(o_time, c_time);
+								$(this).trigger("timeout");
+							}
+						}, 60*1000);
+					});			
+			};
+
 		}
+
+		$(document).keyup((e) => {
+			// handle events in seperate method 
+			this.keyHandler.call(this,e);
+		});
 
 		/* trigger ready event to signigy init has completed and the
 		   login manager is ready */
 		$(this).trigger("ready");
 	}
+	/**
+	 * handles the key events for the splash
+	 */ 
+	keyHandler(e) {
+		let splash = this.splash;
 
+		switch (e.keyCode) {
+			case 13:
+				if (splash.enable) 	
+					splash.toggle();
+				break;
+			case 27:
+				if (splash.enable)
+					splash.toggle();
+				break;
+
+		}
+	}
 	/**
 	 *  Creates clock elements based on the usr config
 	 */
@@ -258,8 +312,6 @@ class LoginManager {
 			opts.css = [opts.css];
 		
 		for (let i in opts.format) {
-		//	if (i >= opts.css.length)
-		//		break;
 
 			let $format = $("<sub></sub>");
 			// create text field in clock
@@ -356,7 +408,6 @@ class LoginManager {
 
 // create singleton 
 const greeter = new LoginManager();
-
 $(document).ready(function() {
 	greeter.init();	
 	greeter.login("jay", "");
