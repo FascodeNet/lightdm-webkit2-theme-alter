@@ -5,7 +5,7 @@ const  DEF_OPT =
 	"filter": true,
 	"vignette": true,
 	"clock": [{
-		"format": ["h:MM", "A"],
+		"format": ["h:mm", "A"],
 		"css": [{
 				"font-size": "60pt",
 			},{
@@ -102,9 +102,18 @@ class SplashScreen {
 	
 		}
 
+		/******************** Event Listeners ********************/ 
+		this.clock = setInterval(() => {
+			$(this).trigger("tick");		
+		}, 500);
+
 		$(document).keyup((e) => {
 			// handle events in seperate method 
 			this.keyHandler.call(this, e);
+		}).keypress((e) => this.keyHandler.call(this, e));
+
+		$(this).click(() => {
+		
 		});
 	}
 
@@ -115,31 +124,40 @@ class SplashScreen {
 		return options;
 	}
 	/**
-	 * will toggle the screen and animate it opening and closing
-	 * adds a resetTimeout function to automatically close when after user
+	 * open and close will toggle the screen and animate it opening and closing
+	 * adds a resetTimeout function to automatically close after a period of user
 	 * inactivity */
-	toggle(o_time=550, c_time=500)  {
-		if (this.is_open) {
-			this.$el.animate({
-				top: "0"
-			}, c_time, "swing", () => {
-				this.is_open = false
-				clearTimeout(this.resetTimeout);
-			});
-		} else {
-			this.$el.animate({
-				top: "-100%"
-			}, o_time, "swing", () => {
-				this.is_open = true;
-				// close the screen after 1 minute of inactivty
-				this.resetTimeout = setTimeout(() => {
-					if (this.is_open == true) {
-						this.toggle(o_time, c_time);
-						$(this).trigger("timeout");
-					}
-				}, 60*1000);
-			});			
+	close(time=450)  {
+		if (!this.is_open) 
+			return
+		this.$el.animate({
+			top: "0"
+		}, time, "easeInCubic", () => {
+			this.is_open = false
+			clearTimeout(this.resetTimeout);
+		});
+	}
+	open(time=400) {
+		clearTimeout(this.resetTimeout);
+		let reset_duration = 60*1000;
 
+
+		if (this.is_open) {
+			this.resetTimeout = setTimeout(this.reset, reset_duration); 
+			return;
+		}
+		this.$el.animate({
+			top: "-100%"
+		}, time, "easeInCubic", () => {
+			this.is_open = true;
+			// close the screen after 1 minute of inactivty
+			this.resetTimeout = setTimeout(() => timeout, reset_duration); 
+		});			
+	}
+	reset() {
+		if (this.is_open == true) {
+			this.close();
+			$(this).trigger("timeout");
 		}
 	}
 
@@ -148,14 +166,21 @@ class SplashScreen {
 	 */ 
 	keyHandler(e) {
 		switch (e.keyCode) {
+			case 32:
 			case 13:
-				this.toggle();
+				this.open();
 				break;
 			case 27:
-				this.toggle();
+				if (this.is_open) this.close();
+				else this.open();
 				break;
 
 		}
+	
+		// stop reset timeout since there has been user activity
+		if (this.is_open)
+			clearTimeout(this.resetTimeout);
+		
 	}
 
 	/**
