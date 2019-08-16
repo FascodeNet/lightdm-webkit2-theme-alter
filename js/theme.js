@@ -2,27 +2,45 @@
 const  DEF_OPT = 
 {
 	"fit": true,
-	"filter": true,
+	"filter": false,
 	"vignette": true,
 	"active-timeout": 15,
 	"content": {
 		"clock": [{
+			"format": "dddd, MMMM Do",
+			"css": {
+				"color": "white"
+			},
+			"parent-css": {
+				"margin-top": "calc(20vh - 70pt)",
+				"text-align": "center",
+				"font-size": "70pt",
+				"font-family": "Noto Sans",
+				"font-weight": "lighter",
+				"text-shadow": "rgba(0, 0, 0, 0.8) 0px 7px 10px",
+			}
+	        },{
 			"format": ["h:mm", "A"],
 			"css": [
 				{"font-size": "60pt"},
 				{"font-size": "30pt"}
 			],
 			"parent-css": {
+				"margin-top": "20vh",
 				"color": "white",
 				"font-family": "Noto Sans",
+				"font-weight": "lighter",
 				"text-align": "center",
-				"margin-top": "calc(50vh - 90pt)",
 				"text-shadow": "rgba(0, 0, 0, 0.8) 0px 7px 10px",
 			}
 		}],
+
 		"html": [{ 
 			"html":"<text style='display: none' class='active-appear'>Press any key to login</text>",
 			"css": {
+				
+				"margin-top": "5vh",
+				"font-weight": "lighter",
 				"text-align": "center",
 				"color": "rgba(255, 255, 255, 0.5)"
 			}
@@ -137,12 +155,12 @@ class SplashScreen {
 			console.warn("No background images supplied for splash screen.");
 		this.$img.each((i, v) => adjustBackground($(v)));
 
-		//TODO make content loop, so objects can be added in a specified order
 		let options = this.options; // shorthand
 		if (typeof options == "object") {
 			// initilize global values if specfied in the config
 			this.is_open = false;
-
+			
+			
 			if (typeof options["active-timeout"] == "number")
 				this.active_timeout = options["active-timeout"];
 			if (options.filter == true) 
@@ -152,7 +170,6 @@ class SplashScreen {
 				this.$vignette.show();
 			if (typeof options.content == "object")
 				this.initContent(options.content);
-	
 		}
 
 		/******************** Event Listeners ********************/ 
@@ -177,6 +194,7 @@ class SplashScreen {
 			if (!this.isActive())
 				$(this).trigger("active", e)
 		});
+		setTimeout(() => $(this).trigger("active"));
 	}
 	/**
 	 * Loops through the user specified content and adds them to the DOM in order
@@ -274,14 +292,16 @@ class SplashScreen {
 	 *  Creates clock elements based on the usr config
 	 */
 	initClock(opts) {
-		if (typeof opts != "object")
+		if (typeof opts != "object") {
+			console.error("Unable to initialize clock thats not an object");
 			return -1;
+		}
 		// handle arrays and a single clock object
 		if (!Array.isArray(opts))
 			opts = [opts];
 
 		for (let i in opts) {
-			this.$clock = $("<div class='clock'></div>");
+			this.$clock = $("<div id='clock-" + i + "' class='clock'></div>");
 			this.$content.append(this.$clock);
 			this.startClock(this.$clock, opts[i]);
 		}
@@ -315,7 +335,6 @@ class SplashScreen {
 			let $format = $("<sub></sub>");
 			// create text field in clock
 			$clock.append($format);
-
 			// apply css styles
 			if (i < opts.css.length && typeof opts.css[i] == "object")
 				$format.css(opts.css[i]);
