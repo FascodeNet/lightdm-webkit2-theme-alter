@@ -4,27 +4,30 @@ const  DEF_OPT =
 	"fit": true,
 	"filter": true,
 	"vignette": true,
-	"clock": [{
-		"format": ["h:mm", "A"],
-		"css": [
-			{"font-size": "60pt"},
-			{"font-size": "30pt"}
-		],
-		"parent-css": {
-			"color": "white",
-			"font-family": "Noto Sans",
-			"text-align": "center",
-			"margin-top": "calc(50vh - 90pt)",
-			"text-shadow": "rgba(0, 0, 0, 0.8) 0px 7px 10px",
-		}
-	}],
-	"html": [{ 
-		"text":"Press any key to login",
-		"css": {
-			"text-align": "center",
-			"color": "rgba(255, 255, 255, 0.5)"
-		}
-	}]
+	"active-timeout": 15,
+	"content": {
+		"clock": [{
+			"format": ["h:mm", "A"],
+			"css": [
+				{"font-size": "60pt"},
+				{"font-size": "30pt"}
+			],
+			"parent-css": {
+				"color": "white",
+				"font-family": "Noto Sans",
+				"text-align": "center",
+				"margin-top": "calc(50vh - 90pt)",
+				"text-shadow": "rgba(0, 0, 0, 0.8) 0px 7px 10px",
+			}
+		}],
+		"html": [{ 
+			"html":"<text style='display: none' class='active-appear'>Press any key to login</text>",
+			"css": {
+				"text-align": "center",
+				"color": "rgba(255, 255, 255, 0.5)"
+			}
+		}]
+	}
 };
 
 /**
@@ -122,6 +125,8 @@ class SplashScreen {
 		this.$content = $("#splash-screen-content");
 		this.options = this.getUserOptions();
 		this.is_open = false;	
+		this.last_active = 0;
+		this.active_timeout = 15;
 
 		if (!this.$el.length)
 			console.error("Missing-screen element.");
@@ -135,28 +140,31 @@ class SplashScreen {
 		//TODO make content loop, so objects can be added in a specified order
 		let options = this.options; // shorthand
 		if (typeof options == "object") {
-			this.is_open = false;
 			// initilize global values if specfied in the config
-			if (options.filter == true) {
+			this.is_open = false;
+
+			if (typeof options["active-timeout"] == "number")
+				this.active_timeout = options["active-timeout"];
+			if (options.filter == true) 
 				this.$img.addClass("filter");	
-			}
-			if (options.vignette == true) {
+			if (options.vignette == true)
 				this.$vignette = $("#vignette");
 				this.$vignette.show();
-			}
-			if (typeof options.clock == "object") {
-				this.initClock(options.clock);
-			}
-			if (options.html) {
-				this.initHTML(options.html);	
-			}
+			if (typeof options.content == "object")
+				this.initContent(options.content);
 	
 		}
 
 		/******************** Event Listeners ********************/ 
 		this.clock = setInterval(() => {
 			$(this).trigger("tick");		
+			
+			if (!this.isActive()) 
+				$(this).trigger("inactive");
 		}, 500);
+		
+		// update last active time 
+		$(this).on("active", () => this.last_active = moment());
 
 		$(document).keyup((e) => {
 			// handle events in seperate method 
@@ -165,13 +173,23 @@ class SplashScreen {
 
 		this.$el.click(() => {
 			this.open();	
+		}).mousemove((e) => {
+			if (!this.isActive())
+				$(this).trigger("active", e)
 		});
 	}
-
-	removeFilter() {
-		this.$img.animate({
-			
-		}, 1000);
+	/**
+	 * Loops through the user specified content and adds them to the DOM in order
+	 */
+	initContent(content) {
+		for (let content_type in content) {
+			if (content_type == "clock")
+				this.initClock(content[content_type]);
+			else if (content_type == "html")		
+				this.initHTML(content[content_type]);
+			else 
+				console.warn("Specified content " + content_type + " is not valid.");
+		}
 	}
 
 	getUserOptions() {
@@ -241,6 +259,15 @@ class SplashScreen {
 		if (this.is_open)
 			clearTimeout(this.resetTimeout);
 		
+		if (!this.isActive())
+			$(this).trigger("active", e);
+	}
+
+	isActive() {
+		if (moment().diff(this.last_active, "seconds", true) > 30) {
+			return 0;
+		}
+		return 1;
 	}
 
 	/**
@@ -324,7 +351,7 @@ class SplashScreen {
 				// create simple text element
 				this.$content.append($el);		
 			} else if (typeof el == "object") {
-				// let user specify element properites in object el
+				// let user specify element properites in object el.
 				let $el = $("<div>");
 				for (let prop in el) {
 					$el[prop](el[prop]);
@@ -347,5 +374,13 @@ $(greeter).ready(function() {
 	$(greeter).on("access-grant", () => {
              lightdm.start_session_sync("i3");
 	}).on("access-deny", () => console.log("denied!"));
+
+	$(greeter.splash).on("active", function() {
+		$(".active-appear").fadeIn();
+	}).on("inactive", function() {
+		$(".active-appear").fadeOut();
+		
+	});
 });
+
 
