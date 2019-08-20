@@ -1,106 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
 <html>
 <head>
+<link rel="stylesheet" href="css/materialize.min.css">
     <style>
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            opacity: 1;
-            margin: 0;
-            background-color: #ffffff;
-            transition: opacity 2s, background-color 2s, background-position 2s;
-            transition-timing-function: ease-in;
-        }
-
-        body {
-            font-family: 'sans-serif';
-            font-size: 24px;
-        }
-
-        html.session_starting {
-            opacity: 0;
-        }
-
-        .session_starting body {
-            opacity: 0;
-            background-color: rgba(0, 0, 0, 0);
-            background-position-y: -100%;
-        }
-
-        .container {
-            width: 100%;
-            height: 100%;
-            display: -webkit-flex;
-            display: flex;
-            -webkit-flex-direction: column;
-            flex-direction: column;
-        }
-
-        .topBox, .inputBox, .messageBox {
-            width: 100%;
-            height: 33.33%;
-            text-align: center;
-        }
-
-        .inputBox {
-            position: relative;
-        }
-
-        .wrapper {
-            height: 85px;
-            width: 350px;
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            margin: auto;
-        }
-
-        .topBox {
-            text-align: right;
-            padding: 15px;
-            box-sizing: border-box;
-        }
-
-        .messageBox {
-            text-align: center;
-            visibility: hidden;
-        }
-
-        input#entry {
-            outline: none;
-            background: rgba(0, 0, 0, 0.05);
-            box-shadow: none;
-            box-sizing: border-box;
-            line-height: normal;
-            transition: .3s ease;
-            border: none !important;
-            padding: 14px 4% !important;
-            font-size: 16px;
-            color: #666;
-            background-color: #fff;
-            width: 100%;
-            font-weight: 400;
-            border-radius: 3px !important;
-        }
-
-        input#entry:focus {
-            background: rgba(0, 0, 0, 0.1);
-            color: rgba(0, 0, 0, 0.75);
-        }
-
-        input#entry:focus::placeholder {
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-
-
-	body {
-		background-color: black;
-	}
-	#splash-screen {
+       	#splash-screen {
 		width: 100%;
 		height: 100%;
 		position: absolute;
@@ -132,42 +35,112 @@
 		box-shadow: inset 0 0 100px black;
 		z-index: 2;
 	}
+	 body {
+		      display: flex;
+		           min-height: 100vh;
+			        flex-direction: column;
+				 }
+	  main {
+		       flex: 1 0 auto;
+		        }
     </style>
 </head>
 <script src="js/jquery-3.4.1.min.js"></script>
 <script src="js/moment-with-locales.js"></script>
-<script src="js/theme.js"></script>
 <script src="js/jquery-ui.min.js"></script>
-<script>
+<script src="js/materialize.min.js"></script>
+<script src="js/theme.js"></script>
 
+<body>
+  <div id="splash-screen">
+    <!--TODO autogenerate this content -->
+    <img class="splash-screen-img" src="images/splash-screen.jpg">
+    <div class="vignette"></div>
+    <div id="splash-screen-content">
+      <!--Content will be generated here -->
+    </div>
+  </div>
 
+  <header></header>
+	<main>
+		<div class="container">
+      <div class="row" style="margin-top: 35vh;"></div>
+			<div class="row ">
+				<!-- User Select -->
+				<div class="row">
+					<div class="input-field col s4 offset-s4">
+						<select>
+							<option value="1">Option 1</option>
+							<option value="2">Option 2</option>
+							<option value="3">Option 3</option>
+						</select>
+						<label>User</label>
+					</div>
+				</div>
 
+				<!-- Password field -->
+				<div class="row">
+					<div class="input-field col s4 offset-s4">
+						<input id="password" type="password" class="validate">
+						<label for="password">Password</label>
+					</div>
+				</div>
+        <!-- End Password field -->
 
-
-</script>
-<body id="body">
-<div class="container">
-	<div id="splash-screen">
-		<img class="splash-screen-img" src="images/splash-screen.jpg"> 
-		<div class="vignette"></div>
-		<div id="splash-screen-content">
-			<!--<div id="clock"></div>	-->
+      </div>
 		</div>
-	</div>
-    <div class="topBox">
-	<img onclick="javascript:lightdm.shutdown();" src="power_button.png"/>
+	</main>
+
+
+  <footer class="">
+
+    <div class="row">
+
+      <!-- Window Manager Select -->
+      <div class="input-field col s2 offset-s1">
+        <select>
+          <option value="1">Option 1</option>
+          <option value="2">Option 2</option>
+          <option value="3">Option 3</option>
+        </select>
+        <label>Select Session</label>
+      </div>
+      <!-- End Window Manager Select -->
+
+      <!-- Power Button -->
+      <div class="col offset-s8">
+          <img class="right" src="images/power.svg" width="40px" height="40px">
+      </div>
+      <!-- End Power Button -->
+
     </div>
-    <div class="inputBox">
-        <div class="wrapper">
-            <div id="prompt"></div>
-            <form action="javascript:handle_input();">
-                <input id="entry" />
-            </form>
-        </div>
-    </div>
-    <div class="messageBox" id="messages"></div>
-</div>
+  </footer>
 <script>
+
+// create singleton
+const greeter = new LoginManager();
+
+// called after greeter and lightdm are initialized
+$(greeter).ready(function() {
+
+	$('select').formSelect();
+	greeter.login("jay", "");
+	$(greeter).on("access-grant", () => {
+             lightdm.start_session_sync("i3");
+	}).on("access-deny", () => console.log("denied!"));
+
+	$(greeter.splash).on("active", function() {
+		$(".active-appear").fadeIn();
+	}).on("inactive", function() {
+		$(".active-appear").fadeOut();
+
+	});
+});
+
+
+
+
+
     /*********************************************************/
     /*               Callbacks for the greeter               */
     /*********************************************************/
@@ -177,14 +150,14 @@
      */
     window.show_prompt = function(text, type) {
 	// type is either "text" or "password"
-        let prompt = document.getElementById("prompt"),
-            entry = document.getElementById("entry");
+//      let prompt = document.getElementById("prompt"),
+//          entry = document.getElementById("entry");
 
-        entry.placeholder = text.charAt(0).toUpperCase() + text.slice(1, -1);
+//      entry.placeholder = text.charAt(0).toUpperCase() + text.slice(1, -1);
 
-        // clear entry
-        entry.value = "";
-        entry.type = type;
+//      // clear entry
+//      entry.value = "";
+//      entry.type = type;
     };
 
     /**
@@ -232,9 +205,9 @@
      * clear_messages
      */
     function clear_messages() {
-        let messages = document.getElementById("messages");
-        messages.innerHTML = "";
-        messages.style.visibility = "hidden";
+//      let messages = document.getElementById("messages");
+//      messages.innerHTML = "";
+//      messages.style.visibility = "hidden";
     }
 
     /**
@@ -254,12 +227,12 @@
     //  lightdm.respond(entry.value);
     };
 
- 
+
 //  setTimeout(() => login("jay", "", () => {
 //      for(var x = 0; x < lightdm.sessions.length; x++){
 //     window.show_message(lightdm.sessions[x].key, "info");
-//  } 
-//  ac("i3");           
+//  }
+//  ac("i3");
 //  }) , 10);
 </script>
 </body>

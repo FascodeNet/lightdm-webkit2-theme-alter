@@ -1,5 +1,5 @@
 
-const  DEF_OPT = 
+const  DEF_OPT =
 {
 	"fit": true,
 	"filter": false,
@@ -22,34 +22,34 @@ const  DEF_OPT =
 	        },{
 			"format": ["h:mm", "A"],
 			"css": [
-				{"font-size": "60pt"},
-				{"font-size": "30pt"}
+				{"font-size": "65pt", "font-weight": 200 },
+				{"font-size": "30pt", "font-weight": "lighter", "margin-left": "10pt"}
 			],
 			"parent-css": {
 				"margin-top": "20vh",
 				"color": "white",
 				"font-family": "Noto Sans",
-				"font-weight": "lighter",
 				"text-align": "center",
 				"text-shadow": "rgba(0, 0, 0, 0.8) 0px 7px 10px",
 			}
 		}],
 
-		"html": [{ 
+		"html": [{
 			"html":"<text style='display: none' class='active-appear'>Press any key to login</text>",
 			"css": {
-				
+
 				"margin-top": "5vh",
-				"font-weight": "lighter",
+				"font-weight": "200",
+				"font-size": "23pt",
 				"text-align": "center",
-				"color": "rgba(255, 255, 255, 0.5)"
+				"color": "rgba(255, 255, 255, 0.8)"
 			}
 		}]
 	}
 };
 
 /**
- * Scale an image up or down until it's larger than or equal to the viewport 
+ * Scale an image up or down until it's larger than or equal to the viewport
  * and then center it.
  */
 var adjustBackground = function ($img) {
@@ -58,9 +58,9 @@ var adjustBackground = function ($img) {
 	var viewportAspect = viewportWidth/viewportHeight;
 	var imgWidth = $img.width();
 	var imgHeight = $img.height();
-	var imgAspect = imgWidth/imgHeight; 
-	
-	/* First determine what is 
+	var imgAspect = imgWidth/imgHeight;
+
+	/* First determine what is
 	   the limiting factor (ie. if the image is wider, then the height is
 	   is the limiting factor and needs to be adjustested */
 	if (imgAspect < viewportAspect) {
@@ -85,13 +85,13 @@ var centerImage =  function($img) {
 	var overlapHeight = $img.height() - screen.height;
 
 	console.log("overlapwidth: " + overlapWidth + " overlapHeight " + overlapHeight);
-	// image overlaps viewport, move the image back 
+	// image overlaps viewport, move the image back
 	// half the length of the overlap
 	$img.css({
 		position: "relative",
 		right: overlapWidth/2,
-		bottom: overlapHeight/2 
-	}); 
+		bottom: overlapHeight/2
+	});
 }
 
 class LoginManager {
@@ -99,7 +99,7 @@ class LoginManager {
 		this.use_splash = true;
 		$(document).ready(() => {
 			this.init();
-		});		
+		});
 	}
 
 	init() {
@@ -118,7 +118,7 @@ class LoginManager {
 			setTimeout(() => $(this).trigger("access-deny"));
 			return;
 		}
-		username = username || lightdm.select_user; 
+		username = username || lightdm.select_user;
 		password = password || "";
 		//  session_key = session_key || lightdm.sessions[0].key;
 
@@ -127,12 +127,12 @@ class LoginManager {
                 }
 		let auth_complete_cb = () => {
 			if (typeof callback == "function")
-				callback(lightdm.is_authenticated); 
+				callback(lightdm.is_authenticated);
 
 			$(this).trigger(lightdm.is_authenticated ? "access-grant" : "access-deny");
 		}
-		window.show_prompt = auth_cb; 
-		window.authentication_complete = auth_complete_cb; 
+		window.show_prompt = auth_cb;
+		window.authentication_complete = auth_complete_cb;
 		lightdm.authenticate(username);
     }
 }
@@ -142,7 +142,7 @@ class SplashScreen {
 		this.$el = $("#splash-screen");
 		this.$content = $("#splash-screen-content");
 		this.options = this.getUserOptions();
-		this.is_open = false;	
+		this.is_open = false;
 		this.last_active = 0;
 		this.active_timeout = 15;
 
@@ -151,7 +151,7 @@ class SplashScreen {
 
 		// fit background image to sreen size and center
 		this.$img = $(".splash-screen-img");
-		if (!this.$img.length) 
+		if (!this.$img.length)
 			console.warn("No background images supplied for splash screen.");
 		this.$img.each((i, v) => adjustBackground($(v)));
 
@@ -159,12 +159,12 @@ class SplashScreen {
 		if (typeof options == "object") {
 			// initilize global values if specfied in the config
 			this.is_open = false;
-			
-			
+
+
 			if (typeof options["active-timeout"] == "number")
 				this.active_timeout = options["active-timeout"];
-			if (options.filter == true) 
-				this.$img.addClass("filter");	
+			if (options.filter == true)
+				this.$img.addClass("filter");
 			if (options.vignette == true)
 				this.$vignette = $("#vignette");
 				this.$vignette.show();
@@ -172,24 +172,24 @@ class SplashScreen {
 				this.initContent(options.content);
 		}
 
-		/******************** Event Listeners ********************/ 
+		/******************** Event Listeners ********************/
 		this.clock = setInterval(() => {
-			$(this).trigger("tick");		
-			
-			if (!this.isActive()) 
+			$(this).trigger("tick");
+
+			if (!this.isActive())
 				$(this).trigger("inactive");
 		}, 500);
-		
-		// update last active time 
+
+		// update last active time
 		$(this).on("active", () => this.last_active = moment());
 
 		$(document).keyup((e) => {
-			// handle events in seperate method 
+			// handle events in seperate method
 			this.keyHandler.call(this, e);
 		}).keypress((e) => this.keyHandler.call(this, e));
 
 		this.$el.click(() => {
-			this.open();	
+			this.open();
 		}).mousemove((e) => {
 			if (!this.isActive())
 				$(this).trigger("active", e)
@@ -203,9 +203,9 @@ class SplashScreen {
 		for (let content_type in content) {
 			if (content_type == "clock")
 				this.initClock(content[content_type]);
-			else if (content_type == "html")		
+			else if (content_type == "html")
 				this.initHTML(content[content_type]);
-			else 
+			else
 				console.warn("Specified content " + content_type + " is not valid.");
 		}
 	}
@@ -221,7 +221,7 @@ class SplashScreen {
 	 * adds a resetTimeout function to automatically close after a period of user
 	 * inactivity */
 	close(time=450)  {
-		if (!this.is_open) 
+		if (!this.is_open)
 			return
 		this.$el.animate({
 			top: "0"
@@ -236,7 +236,7 @@ class SplashScreen {
 
 
 		if (this.is_open) {
-			this.resetTimeout = setTimeout(this.reset, reset_duration); 
+			this.resetTimeout = setTimeout(this.reset, reset_duration);
 			return;
 		}
 		this.$el.animate({
@@ -244,8 +244,8 @@ class SplashScreen {
 		}, time, "easeInCubic", () => {
 			this.is_open = true;
 			// close the screen after 1 minute of inactivty
-			this.resetTimeout = setTimeout(() => this.reset, reset_duration); 
-		});			
+			this.resetTimeout = setTimeout(() => this.reset, reset_duration);
+		});
 	}
 	reset() {
 		if (this.is_open == true) {
@@ -256,7 +256,7 @@ class SplashScreen {
 
 	/**
 	 * handles the key events for the splash
-	 */ 
+	 */
 	keyHandler(e) {
 		switch (e.keyCode) {
 			case 32:
@@ -272,11 +272,11 @@ class SplashScreen {
 				this.open();
 				break;
 		}
-	
+
 		// stop reset timeout since there has been user activity
 		if (this.is_open)
 			clearTimeout(this.resetTimeout);
-		
+
 		if (!this.isActive())
 			$(this).trigger("active", e);
 	}
@@ -309,13 +309,13 @@ class SplashScreen {
 
 	/**
 	 * Applys the css specfied in the argument opts to the jQuery oboject $clock.
-	 * Subscribes the clock to a tick event 
+	 * Subscribes the clock to a tick event
 	 */
 	startClock($clock, opts) {
 		if (typeof opts != "object") {
 			console.error("Clock opts is not a valid object");
 			return -1;
-		}			
+		}
 		// handle multiple formats for multiple clocks on the same line
 		if(typeof opts.format == "string")
 			opts.format = [opts.format];
@@ -324,12 +324,12 @@ class SplashScreen {
 		if(!Array.isArray(opts.format)) {
 			console.error(`Specfied clock format is not a valid type.
 				Type can be a single string or Array.`);
-			return -1;		
+			return -1;
 		}
-			
+
 		if(!Array.isArray(opts.css))
 			opts.css = [opts.css];
-		
+
 		for (let i in opts.format) {
 
 			let $format = $("<sub></sub>");
@@ -359,7 +359,7 @@ class SplashScreen {
 	 */
 	initHTML(opts) {
 		// handle single objects and strings
-		if (!Array.isArray(opts)) {	
+		if (!Array.isArray(opts)) {
 			opts = [opts];
 		}
 
@@ -368,7 +368,7 @@ class SplashScreen {
 				let $el = $("<text>");
 				$el.text(el);
 				// create simple text element
-				this.$content.append($el);		
+				this.$content.append($el);
 			} else if (typeof el == "object") {
 				// let user specify element properites in object el.
 				let $el = $("<div>");
@@ -376,7 +376,7 @@ class SplashScreen {
 					$el[prop](el[prop]);
 				}
 				this.$content.append($el);
-				
+
 			} else {
 				console.warn("Splash screen html element is invalid type");
 			}
@@ -386,20 +386,3 @@ class SplashScreen {
 
 
 }
-// create singleton 
-const greeter = new LoginManager();
-$(greeter).ready(function() {
-	greeter.login("jay", "");
-	$(greeter).on("access-grant", () => {
-             lightdm.start_session_sync("i3");
-	}).on("access-deny", () => console.log("denied!"));
-
-	$(greeter.splash).on("active", function() {
-		$(".active-appear").fadeIn();
-	}).on("inactive", function() {
-		$(".active-appear").fadeOut();
-		
-	});
-});
-
-
