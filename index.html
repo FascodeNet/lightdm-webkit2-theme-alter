@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!DOCTYPE HTML>
 <html>
 <head>
 <link rel="stylesheet" href="css/materialize.min.css">
@@ -39,6 +39,7 @@
 		      display: flex;
 		           min-height: 100vh;
 			        flex-direction: column;
+              background-color: white;
 				 }
 	  main {
 		       flex: 1 0 auto;
@@ -49,9 +50,11 @@
 <script src="js/moment-with-locales.js"></script>
 <script src="js/jquery-ui.min.js"></script>
 <script src="js/materialize.min.js"></script>
+<!-- <script src="js/lightdm-sample.js"></script> -->
 <script src="js/theme.js"></script>
 
 <body>
+    <text style="z-index: 9999; font-size: 23pt; color: blue;" id="debug"></text>
   <div id="splash-screen">
     <!--TODO autogenerate this content -->
     <img class="splash-screen-img" src="images/splash-screen.jpg">
@@ -69,11 +72,7 @@
 				<!-- User Select -->
 				<div class="row">
 					<div class="input-field col s4 offset-s4">
-						<select>
-							<option value="1">Option 1</option>
-							<option value="2">Option 2</option>
-							<option value="3">Option 3</option>
-						</select>
+						<select id="selectUser"></select>
 						<label>User</label>
 					</div>
 				</div>
@@ -81,14 +80,16 @@
 				<!-- Password field -->
 				<div class="row">
 					<div class="input-field col s4 offset-s4">
-						<input id="password" type="password" class="validate">
-						<label for="password">Password</label>
+						<input id="inputPassword" type="password" class="validate">
+						<label for="inputPassword">Password</label>
 					</div>
 				</div>
         <!-- End Password field -->
 
       </div>
 		</div>
+
+
 	</main>
 
 
@@ -98,11 +99,7 @@
 
       <!-- Window Manager Select -->
       <div class="input-field col s2 offset-s1">
-        <select>
-          <option value="1">Option 1</option>
-          <option value="2">Option 2</option>
-          <option value="3">Option 3</option>
-        </select>
+        <select id="selectSession"></select>
         <label>Select Session</label>
       </div>
       <!-- End Window Manager Select -->
@@ -117,123 +114,60 @@
   </footer>
 <script>
 
+
+
 // create singleton
 const greeter = new LoginManager();
 
 // called after greeter and lightdm are initialized
 $(greeter).ready(function() {
+  let $user = $("#selectUser");
+  let $session = $("#selectSession");
+  let $password = $("#inputPassword");
 
-	$('select').formSelect();
-	greeter.login("jay", "");
-	$(greeter).on("access-grant", () => {
-             lightdm.start_session_sync("i3");
-	}).on("access-deny", () => console.log("denied!"));
+  greeter.fillUserSelect($user);
+  greeter.fillSessionSelect($session);
+
+  // $("#debug").text(JSON.stringify(greeter.lightdm,null, 2));
+  $password.keypress((e) => {
+    let username = $user.children("option:selected").val();
+    let pass = $password.val();
+
+    /* attempt authentication, 'grant' event will be emitted on sucecss
+    and 'deny' will be emitted on failure */
+    if (e.keyCode == 13)
+    	greeter.auth(username, pass);
+  });
+
+  // when the user is authenticated do transitions and login
+	$(greeter).on("grant", () => {
+    let session_key = $session.children("option:selected").val();
+    greeter.login(session_key);
+	})
+  .on("deny", () => {
+    // inform the user that the credentials are invalid
+    $password.addClass("invalid");
+  });
 
 	$(greeter.splash).on("active", function() {
 		$(".active-appear").fadeIn();
 	}).on("inactive", function() {
 		$(".active-appear").fadeOut();
-
 	});
 });
 
 
+</script>
+<script>
+  /*
+	 * Define this fuction so lightdm doesnt crash, gets resassigned per
+   * in login manager
+	 */
+	window.authentication_complete = function() {
+
+	};
 
 
-
-    /*********************************************************/
-    /*               Callbacks for the greeter               */
-    /*********************************************************/
-
-    /**
-     * show_prompt callback.
-     */
-    window.show_prompt = function(text, type) {
-	// type is either "text" or "password"
-//      let prompt = document.getElementById("prompt"),
-//          entry = document.getElementById("entry");
-
-//      entry.placeholder = text.charAt(0).toUpperCase() + text.slice(1, -1);
-
-//      // clear entry
-//      entry.value = "";
-//      entry.type = type;
-    };
-
-    /**
-     * show_message callback.
-     */
-    window.show_message = function(text, type) {
-        if (0 === text.length) {
-            return;
-        }
-        let messages = document.getElementById('messages');
-        messages.style.visibility = "visible";
-        // type is either "info" or "error"
-        if (type == 'error') {
-            text = `<p style="color:red;">${text}</p>`;
-        }
-        messages.innerHTML = `${messages.innerHTML}${text}`;
-    };
-
-    /**
-     * authentication_complete callback.
-     */
- var   ac = function(session_key) {
-        if (lightdm.is_authenticated) {
-            // Start default session
-            document.documentElement.addEventListener('transitionend', () => lightdm.start_session_sync(session_key));
-            document.documentElement.className = 'session_starting';
-        } else {
-            window.show_message("Authentication Failed", "error");
-            setTimeout(window.start_authentication, 3000);
-        }
-    };
-
-    /**
-     * autologin_timer_expired callback.
-     */
-    function autologin_timer_expired(username) {
-        /* Stub.  Does nothing. */
-    }
-
-    /*******************************************************************/
-    /*                Functions local to this theme                    */
-    /*******************************************************************/
-
-    /**
-     * clear_messages
-     */
-    function clear_messages() {
-//      let messages = document.getElementById("messages");
-//      messages.innerHTML = "";
-//      messages.style.visibility = "hidden";
-    }
-
-    /**
-     * Kickoff the authentication process
-     */
-    window.start_authentication = function() {
-        clear_messages();
-        // start without providing "user" to make the greeter prompt for "user"
-        lightdm.authenticate();
-    };
-
-    /**
-     * handle the input from the entry field.
-     */
-    window.handle_input = function() {
-    //  let entry = document.getElementById("entry");
-    //  lightdm.respond(entry.value);
-    };
-
-
-//  setTimeout(() => login("jay", "", () => {
-//      for(var x = 0; x < lightdm.sessions.length; x++){
-//     window.show_message(lightdm.sessions[x].key, "info");
-//  }
-//  ac("i3");
-//  }) , 10);
 </script>
 </body>
 </html>

@@ -47,6 +47,23 @@ const  DEF_OPT =
 		}]
 	}
 };
+window.onerror = function() {
+    log.error("Error caught");
+};
+
+var log = {
+	error (str) {
+		if (typeof str == "object") str = JSON.stringify(str,null, 2);
+		let $line = $("<text>").text(str);
+		$("#debug").append($line);
+	},
+	warn () {
+
+	},
+	debug () {
+
+	}
+}
 
 /**
  * Scale an image up or down until it's larger than or equal to the viewport
@@ -84,7 +101,7 @@ var centerImage =  function($img) {
 	var overlapWidth = $img.width() - screen.width;
 	var overlapHeight = $img.height() - screen.height;
 
-	console.log("overlapwidth: " + overlapWidth + " overlapHeight " + overlapHeight);
+
 	// image overlaps viewport, move the image back
 	// half the length of the overlap
 	$img.css({
@@ -103,6 +120,8 @@ class LoginManager {
 	}
 
 	init() {
+				this.lightdm = typeof (lightdm) == "undefined" ? {} : lightdm;
+
 		if (this.use_splash) {
 			this.splash = new SplashScreen();
 		}
@@ -110,31 +129,88 @@ class LoginManager {
 	}
 
 
-	login(username, password, callback) {
-		// set default values
-		if (typeof lightdm == 'undefined') {
-			console.warn("Cannot attempt login without lightdm");
+	auth(username, password, callback) {
+		// lightdm must have each of
+		let req = ["select_user", "is_authenticated", "authenticate"];
+		if (!req.every((x) => this.lightdm.hasOwnProperty(x) )) {
+			log.warn("Cannot attempt login because lightdm is missing the " +
+			"required fields. Please note that lightdm is not explicitly " +
+			"instantiated in a browser session.");
+
 			// call async so that events can be binded in cascade
-			setTimeout(() => $(this).trigger("access-deny"));
+			setTimeout(() => $(this).trigger("deny"));
 			return;
 		}
-		username = username || lightdm.select_user;
+
+		username = username || this.lightdm.select_user;
 		password = password || "";
 		//  session_key = session_key || lightdm.sessions[0].key;
 
 		let auth_cb = () =>  {
-                    lightdm.respond(password);
-                }
+                    this.lightdm.respond(password);
+    }
 		let auth_complete_cb = () => {
 			if (typeof callback == "function")
-				callback(lightdm.is_authenticated);
+				callback(this.lightdm.is_authenticated);
 
-			$(this).trigger(lightdm.is_authenticated ? "access-grant" : "access-deny");
+			$(this).trigger(this.lightdm.is_authenticated ? "grant" : "deny");
 		}
-		window.show_prompt = auth_cb;
+
+	  window.show_prompt = auth_cb;
 		window.authentication_complete = auth_complete_cb;
-		lightdm.authenticate(username);
-    }
+		this.lightdm.authenticate(username);
+  }
+
+	login(session_key) {
+		if (!this.lightdm.sessions.find(x => x.key == session_key)) {
+			log.error("Attempting to login without a valid session.");
+			return;
+		}
+
+		if (!this.lightdm.is_authenticated) {
+			log.error("Attempting to login without authentication.");
+			return;
+		}
+		this.lightdm.start_session_sync(session_key);
+	}
+	authenticateWithSelected($user_input, $password_input) {
+
+	}
+
+	fillUserSelect($el) {
+			if (!Array.isArray(this.lightdm.users)) {
+					log.warn("Cannot fill empty user list in lightdm.");
+					return;
+			}
+
+			$el.empty();
+			for (let s of this.lightdm.users)
+					$el.append("<option value=" + s.username + ">" + s.display_name + "</option>");
+			$el.formSelect();
+	}
+
+	fillSessionSelect($el) {
+		if (!Array.isArray(this.lightdm.sessions)) {
+				log.warn("Cannot fill empty session list in lightdm.");
+				return;
+		}
+
+		$el.empty();
+
+		for (let s of this.lightdm.sessions)
+				$el.append("<option value=" + s.key + ">" + s.name + "</option>");
+
+
+		$el.formSelect();
+	}
+
+	get users() {
+		return this.lightdm.users;
+	}
+
+	get sessions() {
+		return this.lightdm.sessions;
+	}
 }
 
 class SplashScreen {
@@ -147,12 +223,12 @@ class SplashScreen {
 		this.active_timeout = 15;
 
 		if (!this.$el.length)
-			console.error("Missing-screen element.");
+			log.error("Missing-screen element.");
 
 		// fit background image to sreen size and center
 		this.$img = $(".splash-screen-img");
 		if (!this.$img.length)
-			console.warn("No background images supplied for splash screen.");
+			log.warn("No background images supplied for splash screen.");
 		this.$img.each((i, v) => adjustBackground($(v)));
 
 		let options = this.options; // shorthand
@@ -175,7 +251,7 @@ class SplashScreen {
 		/******************** Event Listeners ********************/
 		this.clock = setInterval(() => {
 			$(this).trigger("tick");
-
+				log.error("tick");
 			if (!this.isActive())
 				$(this).trigger("inactive");
 		}, 500);
@@ -194,8 +270,9 @@ class SplashScreen {
 			if (!this.isActive())
 				$(this).trigger("active", e)
 		});
-		setTimeout(() => $(this).trigger("active"));
+		setTimeout(() => $(this).trigger("active"), 1);
 	}
+
 	/**
 	 * Loops through the user specified content and adds them to the DOM in order
 	 */
@@ -206,7 +283,7 @@ class SplashScreen {
 			else if (content_type == "html")
 				this.initHTML(content[content_type]);
 			else
-				console.warn("Specified content " + content_type + " is not valid.");
+				log.warn("Specified content " + content_type + " is not valid.");
 		}
 	}
 
@@ -216,6 +293,7 @@ class SplashScreen {
 		$.extend(true, options, {});
 		return options;
 	}
+
 	/**
 	 * open and close will toggle the screen and animate it opening and closing
 	 * adds a resetTimeout function to automatically close after a period of user
@@ -249,6 +327,7 @@ class SplashScreen {
 	}
 	reset() {
 		if (this.is_open == true) {
+
 			this.close();
 			$(this).trigger("timeout");
 		}
@@ -293,7 +372,7 @@ class SplashScreen {
 	 */
 	initClock(opts) {
 		if (typeof opts != "object") {
-			console.error("Unable to initialize clock thats not an object");
+			log.error("Unable to initialize clock thats not an object");
 			return -1;
 		}
 		// handle arrays and a single clock object
@@ -313,7 +392,7 @@ class SplashScreen {
 	 */
 	startClock($clock, opts) {
 		if (typeof opts != "object") {
-			console.error("Clock opts is not a valid object");
+			log.error("Clock opts is not a valid object");
 			return -1;
 		}
 		// handle multiple formats for multiple clocks on the same line
@@ -322,7 +401,7 @@ class SplashScreen {
 
 		// ensure the format is now an array
 		if(!Array.isArray(opts.format)) {
-			console.error(`Specfied clock format is not a valid type.
+			log.error(`Specfied clock format is not a valid type.
 				Type can be a single string or Array.`);
 			return -1;
 		}
@@ -348,7 +427,7 @@ class SplashScreen {
 
 		if (typeof opts["parent-css"] == "object")
 			$clock.css(opts["parent-css"]);
-		console.debug($clock);
+		log.debug($clock);
 		$clock.show();
 	}
 
@@ -378,7 +457,7 @@ class SplashScreen {
 				this.$content.append($el);
 
 			} else {
-				console.warn("Splash screen html element is invalid type");
+				log.warn("Splash screen html element is invalid type");
 			}
 		}
 
