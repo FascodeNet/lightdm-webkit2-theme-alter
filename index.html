@@ -3,12 +3,14 @@
 <head>
 <link rel="stylesheet" href="css/materialize.min.css">
     <style>
-       	#splash-screen {
+  #splash-screen {
 		width: 100%;
 		height: 100%;
 		position: absolute;
 		z-index: 999;
 		overflow: hidden;
+    background:-webkit-radial-gradient(center, ellipse cover,
+      #9e9e9e 0%, #757575  100%);
 	}
 	.clock {
 		display: none;
@@ -40,14 +42,23 @@
 	  display: flex;
     min-height: 100vh;
     flex-direction: column;
-    background-color: white;
+    background-color: #37474f;
+    background:-webkit-radial-gradient(center, ellipse cover,
+      rgba(55,71,79,1) 0%, rgba(38,50,56,1) 100%);
+    color: white;
     overflow: hidden;
  }
   main {
 	  flex: 1 0 auto;
   }
+  input {
+    color: white;
+  }
+  .caret {
+    fill: grey !important;
+  }
   .power-button {
-    fill: black;
+    fill: white;
   }
   .power-button:hover {
     fill: #01579b;
@@ -86,34 +97,6 @@
 <script src="js/theme.js"></script>
 
 <body>
-		<!-- Debug Console -->
-    <div id="console" class="row">
-        <div class="col s3">
-          <div class="row">
-            <div class="switch">
-              <label>
-                <input type="checkbox" checked="true">
-                <span class="lever"></span>
-                Auto
-              </label>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="input-field col ">
-              <input id="inputEvent" >
-              <label for="inputEvent">Event</label>
-            </div>
-            <a id="buttonTrigger" class="waves-effect waves-light btn">Trigger</a>
-          </div>
-
-        </div>
-        <div class="col s9">
-          <div contentEditable="true" class="terminal"></div>
-        </div>
-    </div>
-<!-- End Debug Console -->
-
   <div id="splash-screen">
     <!--TODO autogenerate this content -->
     <img class="splash-screen-img" src="images/splash-screen.jpg">
@@ -246,7 +229,12 @@
   </footer>
 <script>
 
-const log = new logger();
+// hide enverything until fully loaded
+$("body").append(`<div id="block" style="position: absolute;background-color: black;
+width: 100%; height: 100vh; z-index:9999;"></div>`);
+
+// pass true to logger to show
+const log = new logger(true);
 
 // create singleton
 const greeter = new LoginManager();
@@ -306,6 +294,8 @@ $(greeter).ready(function() {
 	}).on("inactive", function() {
 		$(".active-appear").fadeOut();
 	});
+
+  setTimeout(() => $("#block").remove(), 100);
 });
 
 

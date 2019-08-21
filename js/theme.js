@@ -50,7 +50,35 @@ const  DEF_OPT =
 
 
 class logger {
-	constructor() {
+	constructor(show=false) {
+		if (show) $("body").prepend(`	<!-- Debug Console -->
+		    <div id="console" class="row">
+		        <div class="col s3">
+		          <div class="row">
+		            <div class="switch">
+		              <label>
+		                <input type="checkbox" checked="true">
+		                <span class="lever"></span>
+		                Auto
+		              </label>
+		            </div>
+		          </div>
+
+		          <div class="row">
+		            <div class="input-field col ">
+		              <input id="inputEvent" >
+		              <label for="inputEvent">Event</label>
+		            </div>
+		            <a id="buttonTrigger" class="waves-effect waves-light btn">Trigger</a>
+		          </div>
+
+		        </div>
+		        <div class="col s9">
+		          <div contentEditable="true" class="terminal"></div>
+		        </div>
+		    </div>
+		<!-- End Debug Console -->`);
+
 		window.onerror = (e) => {
 		    this.error(e);
 		};
@@ -155,18 +183,22 @@ var centerImage =  function($img) {
 class LoginManager {
 	constructor() {
 		this.use_splash = true;
+
 		$(document).ready(() => {
 			this._init();
 		});
 	}
 
 	_init() {
-				this.lightdm = typeof (lightdm) == "undefined" ? {} : lightdm;
+		this.lightdm = typeof(lightdm) == "undefined" ? {} : lightdm;
 
 		if (this.use_splash) {
 			this.splash = new SplashScreen();
 		}
-		$(this).trigger("ready");
+		$(this.splash).on("ready", () => {
+					$(this).trigger("ready");
+		});
+
 	}
 
 
@@ -195,8 +227,8 @@ class LoginManager {
 	  window.show_prompt = auth_cb;
 		window.authentication_complete = auth_complete_cb;
 
-		if (typeof this.lightdm.authenticate != "function") {
-			log.error("lighdm does not contain authenticate");
+		if (!this.lightdm.authenticate) {
+			log.error("lightdm does not contain authenticate");
 			$(this).trigger("deny");
 			return;
 		}
