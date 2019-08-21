@@ -47,56 +47,64 @@ const  DEF_OPT =
 		}]
 	}
 };
-window.onerror = function() {
-    log.error("Error caught");
-};
-var $log;
-var $autoscroll;
-var $buttonTrigger;
-$(document).ready(()=> {
-	$log = $("#console .terminal");
-	$autoscroll = $("#console input");
-	$buttonTrigger = $("#buttonTrigger");
 
-	$log.keypress(function(e) {
-      e.preventDefault();
-  });
-	$buttonTrigger.click(() => {
-		let e = $("#inputEvent").val();
-		log.debug("triggering: " + e);
-		$(greeter).trigger(e);
 
-	});
-});
-var log = {
+class logger {
+	constructor() {
+		window.onerror = (e) => {
+		    this.error(e);
+		};
+
+		$(document).ready(() => {
+			this.$log= $("#console .terminal");
+			this.$autoscroll = $("#console input");
+			this.$buttonTrigger = $("#buttonTrigger");
+
+			this.$log.keypress(function(e) {
+		      e.preventDefault();
+		  });
+			this.$buttonTrigger.click(() => {
+				let e = $("#inputEvent").val();
+				log.debug("triggering: " + e);
+				$(greeter).trigger(e);
+
+			});
+		});
+	}
 	_parse(str, color) {
 			if (typeof str == "object") str = JSON.stringify(str,null, 2);
 
 			str =  "[" + moment().format("hh:mm:ss") + "] " + str;
 			str = "<text style='color: " + color + "'>" + str + "</text>";
-			return $log.html() + str;
-	},
+			return this.$log.html() + str;
+	}
 	normal (str) {
-		$log.html(this._parse(str,"white"));
-		if ($autoscroll.prop('checked'))
-			$log[0].scrollTop = $log[0].scrollHeight;
-	},
+		console.log(str);
+		this.$log.html(this._parse(str,"white"));
+		if (this.$autoscroll.prop('checked'))
+			this.$log[0].scrollTop = this.$log[0].scrollHeight;
+	}
 	error (str) {
-		$log.html(this._parse(str,"red"));
-		if ($autoscroll.prop('checked'))
-			$log[0].scrollTop = $log[0].scrollHeight;
-	},
+		console.error(str);
+		this.$log.html(this._parse(str,"red"));
+		if (this.$autoscroll.prop('checked'))
+			this.$log[0].scrollTop = this.$log[0].scrollHeight;
+	}
 	warn (str) {
-		$log.html(this._parse(str,"yellow"));
-		if ($autoscroll.prop('checked'))
-			$log[0].scrollTop = $log[0].scrollHeight;
-	},
+		console.warn(str);
+		this.$log.html(this._parse(str,"yellow"));
+		if (this.$autoscroll.prop('checked'))
+			this.$log[0].scrollTop = this.$log[0].scrollHeight;
+	}
+
 	debug (str) {
-		$log.html(this._parse(str,"lightblue"));
-		if ($autoscroll.prop('checked'))
-			$log[0].scrollTop = $log[0].scrollHeight;
+		console.debug(str);
+		this.$log.html(this._parse(str,"lightblue"));
+		if (this.$autoscroll.prop('checked'))
+			this.$log[0].scrollTop = this.$log[0].scrollHeight;
 	}
 }
+
 
 /**
  * Scale an image up or down until it's larger than or equal to the viewport
@@ -148,11 +156,11 @@ class LoginManager {
 	constructor() {
 		this.use_splash = true;
 		$(document).ready(() => {
-			this.init();
+			this._init();
 		});
 	}
 
-	init() {
+	_init() {
 				this.lightdm = typeof (lightdm) == "undefined" ? {} : lightdm;
 
 		if (this.use_splash) {
@@ -186,6 +194,12 @@ class LoginManager {
 
 	  window.show_prompt = auth_cb;
 		window.authentication_complete = auth_complete_cb;
+
+		if (typeof this.lightdm.authenticate != "function") {
+			log.error("lighdm does not contain authenticate");
+			$(this).trigger("deny");
+			return;
+		}
 		this.lightdm.authenticate(username);
   }
 
@@ -201,13 +215,10 @@ class LoginManager {
 		}
 		this.lightdm.start_session_sync(session_key);
 	}
-	authenticateWithSelected($user_input, $password_input) {
-
-	}
 
 	fillUserSelect($el) {
 			if (!Array.isArray(this.lightdm.users)) {
-					log.warn("Cannot fill empty user list in lightdm.");
+					log.warn("No users to fill in lightdm's list.");
 					return;
 			}
 
@@ -219,7 +230,7 @@ class LoginManager {
 
 	fillSessionSelect($el) {
 		if (!Array.isArray(this.lightdm.sessions)) {
-				log.warn("Cannot fill empty session list in lightdm.");
+					log.warn("No sessions to fill in lightdm's list.");
 				return;
 		}
 
@@ -232,6 +243,40 @@ class LoginManager {
 		$el.formSelect();
 	}
 
+	shutdown() {
+		if (this.lightdm.can_shutdown)
+				this.lightdm.shutdown();
+		else  {
+			log.error("Do not have permission to shutdown");
+			return -1;
+		}
+
+	}
+	restart() {
+		if (this.lightdm.can_restart)
+				this.lightdm.restart();
+		else  {
+			log.error("Do not have permission to restart");
+			return -1;
+		}
+
+	}
+	hibernate() {
+		if (this.lightdm.can_hibernate)
+			this.lightdm.hibernate();
+		else {
+			log.error("Do not have permission to hibernate");
+			return -1;
+		}
+	}
+	suspend() {
+		if (this.lightdm.can_suspend)
+			this.lightdm.suspend();
+		else {
+			log.error("Do not have permission to suspend");
+			return -1;
+		}
+	}
 	get users() {
 		return this.lightdm.users;
 	}
@@ -462,7 +507,7 @@ class SplashScreen {
 
 		if (typeof opts["parent-css"] == "object")
 			$clock.css(opts["parent-css"]);
-		log.debug($clock);
+
 		$clock.show();
 	}
 
