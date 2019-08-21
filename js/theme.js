@@ -53,21 +53,35 @@ window.onerror = function() {
 var $log;
 var $autoscroll;
 $(document).ready(()=> {
-	$log = $("#console textarea");
+	$log = $("#console .terminal");
 	$autoscroll = $("#console input");
 });
 var log = {
-	error (str) {
-		if (typeof str == "object") str = JSON.stringify(str,null, 2);
-		$log.val($log.val() + str + "\n");
+	_parse(str, color) {
+			if (typeof str == "object") str = JSON.stringify(str,null, 2);
+			str =  "[" + moment().format("hh:mm:ss") + "]: " + str;
+			str = "<text style='color: " + color + "'>" + str + "</text>";
+			return $log.html() + str;
+	},
+	normal (str) {
+		$log.html(this._parse(str,"white"));
 		if ($autoscroll.prop('checked'))
-		$log[0].scrollTop = $log[0].scrollHeight;
+			$log[0].scrollTop = $log[0].scrollHeight;
 	},
-	warn () {
-
+	error (str) {
+		$log.html(this._parse(str,"red"));
+		if ($autoscroll.prop('checked'))
+			$log[0].scrollTop = $log[0].scrollHeight;
 	},
-	debug () {
-
+	warn (str) {
+		$log.html(this._parse(str,"yellow"));
+		if ($autoscroll.prop('checked'))
+			$log[0].scrollTop = $log[0].scrollHeight;
+	},
+	debug (str) {
+		$log.html(this._parse(str,"lightblue"));
+		if ($autoscroll.prop('checked'))
+			$log[0].scrollTop = $log[0].scrollHeight;
 	}
 }
 

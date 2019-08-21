@@ -50,13 +50,19 @@
       position: absolute;
       top: 4px;
     }
-    #console textarea {
+    div#console .terminal {
       overflow-y: scroll;
       background-color: rgba(0,0,0,0.8);
-      font-size: 16pt;
+      font-size: 14pt;
       color: white;
       height: 30vh;
       width: 85vw;
+      resize: both;
+    }
+    div#console .terminal text {
+      display: block;
+      padding: 0;
+      margin: 0;
     }
 
     </style>
@@ -69,7 +75,7 @@
 <script src="js/theme.js"></script>
 
 <body>
-
+		<!-- Debug Console -->
     <div id="console" class="row">
         <div class="col">
           <div class="switch">
@@ -81,11 +87,10 @@
           </div>
         </div>
         <div class="col">
-          <textarea rows="10" readonly="true"></textarea>
+          <div class="terminal"></div>
         </div>
-
-
     </div>
+<!-- End Debug Console -->
 
   <div id="splash-screen">
     <!--TODO autogenerate this content -->
