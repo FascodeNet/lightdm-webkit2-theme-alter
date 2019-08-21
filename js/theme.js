@@ -271,7 +271,7 @@ class SplashScreen {
 		/******************** Event Listeners ********************/
 		this.clock = setInterval(() => {
 			$(this).trigger("tick");
-				log.error("tick");
+
 			if (!this.isActive())
 				$(this).trigger("inactive");
 		}, 500);
@@ -319,35 +319,42 @@ class SplashScreen {
 	 * adds a resetTimeout function to automatically close after a period of user
 	 * inactivity */
 	close(time=450)  {
-		if (!this.is_open)
-			return
+		if (this.state == "closed" || this.state == "moving") {
+			log.warn("Cannot close splash screen when state is: " + this.state);
+			return;
+		}
+
+		this.state = "moving";
 		this.$el.animate({
 			top: "0"
 		}, time, "easeInCubic", () => {
-			this.is_open = false
+			this.state = "closed";
 			clearTimeout(this.resetTimeout);
 		});
 	}
 	open(time=400) {
+		if (this.state == "open" || this.state == "moving") {
+			log.warn("Cannot open splash screen when state is: " + this.state);
+			return;
+		}
 		clearTimeout(this.resetTimeout);
 		let reset_duration = 60*1000;
 
-
-		if (this.is_open) {
+		if (this.state == "open" || this.state == "moving") {
 			this.resetTimeout = setTimeout(this.reset, reset_duration);
 			return;
 		}
+		this.state = "moving";
 		this.$el.animate({
 			top: "-100%"
 		}, time, "easeInCubic", () => {
-			this.is_open = true;
+			this.state = "open";
 			// close the screen after 1 minute of inactivty
 			this.resetTimeout = setTimeout(() => this.reset, reset_duration);
 		});
 	}
 	reset() {
-		if (this.is_open == true) {
-
+		if (this.state == "open") {
 			this.close();
 			$(this).trigger("timeout");
 		}
@@ -363,8 +370,8 @@ class SplashScreen {
 				this.open();
 				break;
 			case 27:
-				if (this.is_open) this.close();
-				else this.open();
+				if (this.state == "open") this.close();
+				else if (this.state == "closed") this.open();
 				break;
 			default:
 				if (e.keyCode != 82 && e.keyCode != 17) // for testing
@@ -373,7 +380,7 @@ class SplashScreen {
 		}
 
 		// stop reset timeout since there has been user activity
-		if (this.is_open)
+		if (this.state == "open")
 			clearTimeout(this.resetTimeout);
 
 		if (!this.isActive())
