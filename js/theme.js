@@ -50,12 +50,18 @@ const  DEF_OPT =
 window.onerror = function() {
     log.error("Error caught");
 };
-
+var $log;
+var $autoscroll;
+$(document).ready(()=> {
+	$log = $("#console textarea");
+	$autoscroll = $("#console input");
+});
 var log = {
 	error (str) {
 		if (typeof str == "object") str = JSON.stringify(str,null, 2);
-		let $line = $("<text>").text(str);
-		$("#debug").append($line);
+		$log.val($log.val() + str + "\n");
+		if ($autoscroll.prop('checked'))
+		$log[0].scrollTop = $log[0].scrollHeight;
 	},
 	warn () {
 

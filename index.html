@@ -43,7 +43,22 @@
 				 }
 	  main {
 		       flex: 1 0 auto;
-		        }
+    }
+
+    div#console {
+      z-index: 9999;
+      position: absolute;
+      top: 4px;
+    }
+    #console textarea {
+      overflow-y: scroll;
+      background-color: rgba(0,0,0,0.8);
+      font-size: 16pt;
+      color: white;
+      height: 30vh;
+      width: 85vw;
+    }
+
     </style>
 </head>
 <script src="js/jquery-3.4.1.min.js"></script>
@@ -54,7 +69,24 @@
 <script src="js/theme.js"></script>
 
 <body>
-    <text style="z-index: 9999; font-size: 23pt; color: blue;" id="debug"></text>
+
+    <div id="console" class="row">
+        <div class="col">
+          <div class="switch">
+            <label>
+              <input type="checkbox">
+              <span class="lever"></span>
+              Auto
+            </label>
+          </div>
+        </div>
+        <div class="col">
+          <textarea rows="10" readonly="true"></textarea>
+        </div>
+
+
+    </div>
+
   <div id="splash-screen">
     <!--TODO autogenerate this content -->
     <img class="splash-screen-img" src="images/splash-screen.jpg">
@@ -160,7 +192,7 @@ $(greeter).ready(function() {
 </script>
 <script>
   /*
-	 * Define this fuction so lightdm doesnt crash, gets resassigned per
+	 * Define this fuction so lightdm doesnt crash, gets resassigned
    * in login manager
 	 */
 	window.authentication_complete = function() {
