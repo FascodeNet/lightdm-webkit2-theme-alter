@@ -52,14 +52,27 @@ window.onerror = function() {
 };
 var $log;
 var $autoscroll;
+var $buttonTrigger;
 $(document).ready(()=> {
 	$log = $("#console .terminal");
 	$autoscroll = $("#console input");
+	$buttonTrigger = $("#buttonTrigger");
+
+	$log.keypress(function(e) {
+      e.preventDefault();
+  });
+	$buttonTrigger.click(() => {
+		let e = $("#inputEvent").val();
+		log.debug("triggering: " + e);
+		$(greeter).trigger(e);
+
+	});
 });
 var log = {
 	_parse(str, color) {
 			if (typeof str == "object") str = JSON.stringify(str,null, 2);
-			str =  "[" + moment().format("hh:mm:ss") + "]: " + str;
+
+			str =  "[" + moment().format("hh:mm:ss") + "] " + str;
 			str = "<text style='color: " + color + "'>" + str + "</text>";
 			return $log.html() + str;
 	},
@@ -149,10 +162,9 @@ class LoginManager {
 	}
 
 
-	auth(username, password, callback) {
-		// lightdm must have each of
-		let req = ["select_user", "is_authenticated", "authenticate"];
-		if (!req.every((x) => this.lightdm.hasOwnProperty(x) )) {
+	auth(username="", password="", callback) {
+
+		if (!this.lightdm) {
 			log.warn("Cannot attempt login because lightdm is missing the " +
 			"required fields. Please note that lightdm is not explicitly " +
 			"instantiated in a browser session.");
@@ -161,10 +173,6 @@ class LoginManager {
 			setTimeout(() => $(this).trigger("deny"));
 			return;
 		}
-
-		username = username || this.lightdm.select_user;
-		password = password || "";
-		//  session_key = session_key || lightdm.sessions[0].key;
 
 		let auth_cb = () =>  {
                     this.lightdm.respond(password);
@@ -238,7 +246,7 @@ class SplashScreen {
 		this.$el = $("#splash-screen");
 		this.$content = $("#splash-screen-content");
 		this.options = this.getUserOptions();
-		this.is_open = false;
+		this.state = "closed";
 		this.last_active = 0;
 		this.active_timeout = 15;
 
@@ -366,16 +374,16 @@ class SplashScreen {
 	keyHandler(e) {
 		switch (e.keyCode) {
 			case 32:
-			case 13:
-				this.open();
+			case 13: // Enter key
+				if (this.state == "closed") this.open();
 				break;
-			case 27:
+			case 27: // ESC key
 				if (this.state == "open") this.close();
 				else if (this.state == "closed") this.open();
 				break;
 			default:
-				if (e.keyCode != 82 && e.keyCode != 17) // for testing
-				this.open();
+				if (e.keyCode != 82 && e.keyCode != 17 && this.state == "closed") // for testing
+					this.open();
 				break;
 		}
 
