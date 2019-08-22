@@ -10,7 +10,7 @@
 		z-index: 999;
 		overflow: hidden;
     background:-webkit-radial-gradient(center, ellipse cover,
-      #9e9e9e 0%, #757575  100%);
+    #9e9e9e 0%, #757575  100%);
 	}
 	.clock {
 		display: none;
@@ -237,7 +237,7 @@ $("body").append(`<div id="block" style="position: absolute;background-color: bl
 width: 100%; height: 100vh; z-index:9999;"></div>`);
 
 // pass true to show logger output
-const log = new logger(true);
+const log = new logger(false);
 
 // create singleton
 const greeter = new LoginManager();

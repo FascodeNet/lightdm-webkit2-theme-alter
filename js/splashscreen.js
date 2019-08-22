@@ -144,8 +144,9 @@ class SplashScreen {
 
 		this.state = "moving";
 		this.$el.animate({
-			top: "0"
-		}, time, "easeInCubic", () => {
+			top: "0",
+			filter: "blur(20px)"
+		}, time, "easeOutQuint", () => {
 			this.state = "closed";
 			clearTimeout(this.resetTimeout);
 		});
@@ -165,7 +166,7 @@ class SplashScreen {
 		this.state = "moving";
 		this.$el.animate({
 			top: "-100%"
-		}, time, "easeInCubic", () => {
+		}, time, "easeInCirc", () => {
 			this.state = "open";
 			// close the screen after 1 minute of inactivty
 			this.resetTimeout = setTimeout(() => this.reset, reset_duration);
