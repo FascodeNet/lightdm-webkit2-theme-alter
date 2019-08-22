@@ -21,7 +21,7 @@
 		height: 100%;
 		top: 0;
 	}
-	.splash-screen-img {
+	.SplashScreen-screen-img {
 /*		height: 100%;
 		width: 100%; */
 		/* border: 8px solid red; */
@@ -94,6 +94,9 @@
 <script src="js/jquery-ui.min.js"></script>
 <script src="js/materialize.min.js"></script>
 <!-- <script src="js/lightdm-sample.js"></script> -->
+<!--  Load Plugins -->
+<script src="js/splashscreen.js"></script>
+<!-- Load main theme -->
 <script src="js/theme.js"></script>
 
 <body>
@@ -233,14 +236,15 @@
 $("body").append(`<div id="block" style="position: absolute;background-color: black;
 width: 100%; height: 100vh; z-index:9999;"></div>`);
 
-// pass true to logger to show
+// pass true to show logger output
 const log = new logger(true);
 
 // create singleton
 const greeter = new LoginManager();
 
 // called after greeter and lightdm are initialized
-$(greeter).ready(function() {
+$(greeter).on("ready", function(e) {
+
   let $user = $("#selectUser");
   let $session = $("#selectSession");
   let $password = $("#inputPassword");
@@ -289,7 +293,7 @@ $(greeter).ready(function() {
     $password.val("").prop("placeholder", "Incorrect Password");
   });
 
-	$(greeter.splash).on("active", function() {
+	$(greeter.plugins.SplashScreen).on("active", function() {
 		$(".active-appear").fadeIn();
 	}).on("inactive", function() {
 		$(".active-appear").fadeOut();
