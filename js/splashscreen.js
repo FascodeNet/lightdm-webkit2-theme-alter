@@ -5,6 +5,7 @@ const  DEF_OPT =
 	"filter": false,
 	"vignette": true,
 	"active-timeout": 15,
+	"transition": "fade",
 	"content": {
 		"clock": [{
 			"format": "dddd, MMMM Do",
@@ -17,7 +18,7 @@ const  DEF_OPT =
 				"font-size": "70pt",
 				"font-family": "Noto Sans",
 				"font-weight": "lighter",
-				"text-shadow": "rgba(0, 0, 0, 0.8) 0px 7px 10px",
+				"text-shadow": "rgba(0, 0, 0, 0.5) 0px 7px 10px",
 			}
 	        },{
 			"format": ["h:mm", "A"],
@@ -30,14 +31,13 @@ const  DEF_OPT =
 				"color": "white",
 				"font-family": "Noto Sans",
 				"text-align": "center",
-				"text-shadow": "rgba(0, 0, 0, 0.8) 0px 7px 10px",
+				"text-shadow": "rgba(0, 0, 0, 0.5) 0px 7px 10px",
 			}
 		}],
 
 		"html": [{
 			"html":"<text style='display: none' class='active-appear'>Press any key to login</text>",
 			"css": {
-
 				"margin-top": "5vh",
 				"font-weight": "200",
 				"font-size": "23pt",
@@ -74,17 +74,23 @@ class SplashScreen {
 			// initilize global values if specfied in the config
 			this.is_open = false;
 
-
 			if (typeof options["active-timeout"] == "number")
 				this.active_timeout = options["active-timeout"];
+
 			if (options.filter == true)
 				this.$img.addClass("filter");
+
 			if (options.vignette == true) {
 				this.$vignette = $("#vignette");
 				this.$vignette.show();
 			}
+
+			if (typeof options.transition == "string")
+				this.transition = options.transition;
+
 			if (typeof options.content == "object")
 				this.initContent(options.content);
+
 			console.log("triggering ready for splash");
 			$(this).trigger("ready");
 		}
@@ -138,25 +144,31 @@ class SplashScreen {
 	 * open and close will toggle the screen and animate it opening and closing
 	 * adds a resetTimeout function to automatically close after a period of user
 	 * inactivity */
-	close(time=500)  {
+	close()  {
 		if (this.state == "closed" || this.state == "moving") {
 			log.warn("Cannot close splash screen when state is: " + this.state);
 			return;
 		}
 
 		this.state = "moving";
-		// this.$el.css("top", "0");
-		// this.$el.css("opacity", "1");
+		if (this.transition == "fade") {
+			this.$el.fadeIn("slow", () => {
+				this.state = "closed";
+				this.$content.fadeIn("slow");
+				clearTimeout(this.resetTimeout);
+			});
+		} else if (this.transition == "slide") {
+			this.$el.animate({
+				top: "0"
+			},"slow", "easeOutQuint", () => {
+				this.state = "closed";
+				clearTimeout(this.resetTimeout);
+			});
+		}
 
-		this.$el.fadeIn(MOVE_DUR, () => {
-			// this.$el.remove("filter");
-			this.state = "closed";
-			this.$content.fadeIn("slow")
-			// this.$el.show();
-		});
 
 	}
-	open(time=300) {
+	open() {
 		if (this.state == "open" || this.state == "moving") {
 			log.warn("Cannot open splash screen when state is: " + this.state);
 			return;
@@ -170,22 +182,20 @@ class SplashScreen {
 		}
 		this.state = "moving";
 
-				this.$content.fadeOut("fast", () => {
-					// this.$el.remove("filter");
-					this.$el.fadeOut(MOVE_DUR, () => {
-						this.state = "open";
-					});
-
-					// this.$el.show();
+		if (this.transition == "fade") {
+			this.$content.fadeOut("fast", () => {
+				this.$el.fadeOut(MOVE_DUR, () => {
+					this.state = "open";
 				});
-		// this.$el.css("top", "-100%");
-		// this.$el.css("opacity", "0");
-		//
-		//
-		// setTimeout(() => {
-		// 	this.state = "open";
-		// 	this.$el.hide();
-		// }, CSS_MOVE_DUR);
+			});
+
+		} else if (this.transition == "slide") {
+			this.$el.animate({
+					top: "-100%"
+			}, "slow", "easeInCubic", () => {
+				this.state = "open";
+			});
+		}
 
 
 	}
