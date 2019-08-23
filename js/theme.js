@@ -180,7 +180,7 @@ class LoginManager {
 						if (ready_count == this._plugins.length)
 							$(this).trigger("ready");
 			});
-			$plugin.trigger("init");
+			$plugin.on("load", () => $plugin.trigger("init"));
 
 		}
 	}

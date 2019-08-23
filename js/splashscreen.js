@@ -1,58 +1,85 @@
-const MOVE_DUR = 300;
-const  DEF_OPT =
-{
-	"fit": true,
-	"filter": false,
-	"vignette": true,
-	"active-timeout": 15,
-	"transition": "fade",
-	"content": {
-		"clock": [{
-			"format": "dddd, MMMM Do",
-			"css": {
-				"color": "white"
-			},
-			"parent-css": {
-				"margin-top": "calc(20vh - 70pt)",
-				"text-align": "center",
-				"font-size": "70pt",
-				"font-family": "Noto Sans",
-				"font-weight": "lighter",
-				"text-shadow": "rgba(0, 0, 0, 0.5) 0px 7px 10px",
-			}
-	        },{
-			"format": ["h:mm", "A"],
-			"css": [
-				{"font-size": "65pt", "font-weight": 200 },
-				{"font-size": "30pt", "font-weight": "lighter", "margin-left": "10pt"}
-			],
-			"parent-css": {
-				"margin-top": "20vh",
-				"color": "white",
-				"font-family": "Noto Sans",
-				"text-align": "center",
-				"text-shadow": "rgba(0, 0, 0, 0.5) 0px 7px 10px",
-			}
-		}],
 
-		"html": [{
-			"html":"<text style='display: none' class='active-appear'>Press any key to login</text>",
-			"css": {
-				"margin-top": "5vh",
-				"font-weight": "200",
-				"font-size": "23pt",
-				"text-align": "center",
-				"color": "rgba(255, 255, 255, 0.8)"
-			}
-		}]
-	}
-};
-
+/**
+ * Creates a splash screen with custom generated content,
+ * diplays when the user inactive.
+ *
+ * A Plugin for the LoginManager class
+ *
+ * EVENTS:
+ * -----------------------------------------------------------------------------
+ * Listens:
+ * 'load' signifies that SplashScreen has finished asyncrhonously
+ * loading its config files.
+ *
+ * 'ready' emitted once the SplashScreen has finished creating its content
+ *
+ * Triggers:
+ * 'init' causes the SplashScreen content to be generated
+ *
+ */
 class SplashScreen {
 	constructor() {
-		this.options = this.getUserOptions();
+		/* Speed of SplashScreen transitions */
+		this._ANIMATION_DUR = 300;
+
+		/* Default options for the  splash screen */
+		this._DEF_OPT = {
+			"fit": true,
+			"filter": false,
+			"vignette": true,
+			"active-timeout": 15,
+			"transition": "fade",
+			"content": {
+				"clock": [{
+					"format": "dddd, MMMM Do",
+					"css": {
+						"color": "white"
+					},
+					"parent-css": {
+						"margin-top": "calc(20vh - 70pt)",
+						"text-align": "center",
+						"font-size": "70pt",
+						"font-family": "Noto Sans",
+						"font-weight": "lighter",
+						"text-shadow": "rgba(0, 0, 0, 0.5) 0px 7px 10px",
+					}
+			        },{
+					"format": ["h:mm", "A"],
+					"css": [
+						{"font-size": "65pt", "font-weight": 200 },
+						{"font-size": "30pt", "font-weight": "lighter", "margin-left": "10pt"}
+					],
+					"parent-css": {
+						"margin-top": "20vh",
+						"color": "white",
+						"font-family": "Noto Sans",
+						"text-align": "center",
+						"text-shadow": "rgba(0, 0, 0, 0.5) 0px 7px 10px",
+					}
+				}],
+
+				"html": [{
+					"html":"<text style='display: none' class='active-appear'>Press any key to login</text>",
+					"css": {
+						"margin-top": "5vh",
+						"font-weight": "200",
+						"font-size": "23pt",
+						"text-align": "center",
+						"color": "rgba(255, 255, 255, 0.8)"
+					}
+				}]
+			}
+		};
+
+		this._loadConfig();
+		// listen to the init event
 		$(this).on("init", () => this._init());
 	}
+
+	/**
+	 * Generates the content specified by the user config.
+	 * Should be called after the load event has been triggered.
+	 */
 	_init() {
 		this.$el = $("#splash-screen");
 		this.$content = $("#splash-screen-content");
@@ -69,7 +96,7 @@ class SplashScreen {
 			log.warn("No background images supplied for splash screen.");
 		this.$img.each((i, v) => adjustBackground($(v)));
 
-		let options = this.options; // shorthand
+		let options = this._options; // shorthand
 		if (typeof options == "object") {
 			// initilize global values if specfied in the config
 			this.is_open = false;
@@ -89,7 +116,7 @@ class SplashScreen {
 				this.transition = options.transition;
 
 			if (typeof options.content == "object")
-				this.initContent(options.content);
+				this._initContent(options.content);
 
 			console.log("triggering ready for splash");
 			$(this).trigger("ready");
@@ -99,7 +126,7 @@ class SplashScreen {
 		this.clock = setInterval(() => {
 			$(this).trigger("tick");
 
-			if (!this.isActive())
+			if (!this._isActive())
 				$(this).trigger("inactive");
 		}, 500);
 
@@ -108,150 +135,73 @@ class SplashScreen {
 
 		$(document).keyup((e) => {
 			// handle events in seperate method
-			this.keyHandler.call(this, e);
-		}).keypress((e) => this.keyHandler.call(this, e));
+			this._keyHandler.call(this, e);
+		}).keypress((e) => this._keyHandler.call(this, e));
 
+		/* Bind event listners to trigger activity event. This can be used on the
+				front end to implement spcific behaivours while the user is active */
 		this.$el.click(() => {
-			this.open();
+			this._open();
 		}).mousemove((e) => {
-			if (!this.isActive())
+			if (!this._isActive())
 				$(this).trigger("active", e)
 		});
 		setTimeout(() => $(this).trigger("active"), 1);
 	}
+
 	/**
-	 * Loops through the user specified content and adds them to the DOM in order
+	 * Loops through the user specified content and appends them to the DOM
+	 * in the order specified by the user config
 	 */
-	initContent(content) {
+	_initContent(content) {
 		for (let content_type in content) {
 			if (content_type == "clock")
-				this.initClock(content[content_type]);
+				this._initClock(content[content_type]);
 			else if (content_type == "html")
-				this.initHTML(content[content_type]);
+				this._initHTML(content[content_type]);
 			else
 				log.warn("Specified content " + content_type + " is not valid.");
 		}
 	}
 
-	getUserOptions() {
-		let options = {};
-		$.extend(true, options, DEF_OPT);
-		$.extend(true, options, {});
-		return options;
-	}
-
 	/**
-	 * open and close will toggle the screen and animate it opening and closing
-	 * adds a resetTimeout function to automatically close after a period of user
-	 * inactivity */
-	close()  {
-		if (this.state == "closed" || this.state == "moving") {
-			log.warn("Cannot close splash screen when state is: " + this.state);
-			return;
-		}
+	 * Asyncrhonously reads JSON config file from json/SplashScreen.json
+	 * and overwrites the default options with those specified by the config.
+	 *
+	 * Triggers: 'load' on completion. Caller (LoginManager) must listen for this
+	 * 	event to then trigger 'init'
+	 */
+	_loadConfig() {
+			let options = {};
+			$.extend(true, options, this._DEF_OPT);
 
-		this.state = "moving";
-		if (this.transition == "fade") {
-			this.$el.fadeIn("slow", () => {
-				this.state = "closed";
-				this.$content.fadeIn("slow");
-				clearTimeout(this.resetTimeout);
+			$.getJSON("json/SplashScreen.json", (data) => {
+				$.extend(true, options, data);
+				this._options = options;
+				$(this).trigger("load");
+			}).fail(() => {
+				$.extend(true, options, {});
+				this._options = options;
+				$(this).trigger("load");
 			});
-		} else if (this.transition == "slide") {
-			this.$el.animate({
-				top: "0"
-			},"slow", "easeOutQuint", () => {
-				this.state = "closed";
-				clearTimeout(this.resetTimeout);
-			});
-		}
-
-
-	}
-	open() {
-		if (this.state == "open" || this.state == "moving") {
-			log.warn("Cannot open splash screen when state is: " + this.state);
-			return;
-		}
-		clearTimeout(this.resetTimeout);
-		let reset_duration = 60*1000;
-
-		if (this.state == "open" || this.state == "moving") {
-			this.resetTimeout = setTimeout(this.reset, reset_duration);
-			return;
-		}
-		this.state = "moving";
-
-		if (this.transition == "fade") {
-			this.$content.fadeOut("fast", () => {
-				this.$el.fadeOut(MOVE_DUR, () => {
-					this.state = "open";
-				});
-			});
-
-		} else if (this.transition == "slide") {
-			this.$el.animate({
-					top: "-100%"
-			}, "slow", "easeInCubic", () => {
-				this.state = "open";
-			});
-		}
-
-
 	}
 
- _moveUp($el, cb) {
-	      $el.addClass("move-up");
-	      setTimeout(() => {
-	        $el.css("top", "-100%").removeClass("move-up");
-					if (typeof cb == "function") cb($el);
-	      }, CSS_MOVE_DUR);
-	}
-	_moveDown($el, cb) {
-		$el.addClass("move-down");
-		setTimeout(() => {
-			$el.css("top", "0").removeClass("move-down");
-			if (typeof cb == "function") cb($el);
-		}, CSS_MOVE_DUR);
-	}
 	/**
 	 * Closes the splash screen if there has been no user activity
 	 */
-	reset() {
+	_reset() {
 		if (this.state == "open") {
-			this.close();
+			this._close();
 			$(this).trigger("timeout");
 		}
 	}
 
 	/**
-	 * handles the key events for the splash
+	 * Determines if there was user acitivty within in a given amount
+	 * of time.
+	 * Returns 1 if splash screen is active, else 0
 	 */
-	keyHandler(e) {
-		switch (e.keyCode) {
-			case 32:
-			case 13: // Enter key
-				if (this.state == "closed") this.open();
-				break;
-			case 27: // ESC key
-				if (this.state == "open") this.close();
-				else if (this.state == "closed") this.open();
-				break;
-			default:
-				if (e.keyCode != 82 && e.keyCode != 17 && this.state == "closed") // for testing
-					this.open();
-				break;
-		}
-
-		// stop reset timeout since there has been user activity
-		if (this.state == "open")
-			clearTimeout(this.resetTimeout);
-
-		if (!this.isActive())
-			$(this).trigger("active", e);
-	}
-
-	isActive() {
+	_isActive() {
 		if (moment().diff(this.last_active, "seconds", true) > 30) {
 			return 0;
 		}
@@ -259,9 +209,10 @@ class SplashScreen {
 	}
 
 	/**
-	 *  Creates clock elements based on the usr config
+	 * Creates clock elements based on the usr config.
+	 * Appends each clock to the DOM and binds update events using _startClock
 	 */
-	initClock(opts) {
+	_initClock(opts) {
 		if (typeof opts != "object") {
 			log.error("Unable to initialize clock thats not an object");
 			return -1;
@@ -270,10 +221,12 @@ class SplashScreen {
 		if (!Array.isArray(opts))
 			opts = [opts];
 
+		/* loop through each clock in the config and add it to the dom,
+				then initialize an update event using start clock */
 		for (let i in opts) {
 			this.$clock = $("<div id='clock-" + i + "' class='clock'></div>");
 			this.$content.append(this.$clock);
-			this.startClock(this.$clock, opts[i]);
+			this._startClock(this.$clock, opts[i]);
 		}
 	}
 
@@ -281,7 +234,7 @@ class SplashScreen {
 	 * Applys the css specfied in the argument opts to the jQuery oboject $clock.
 	 * Subscribes the clock to a tick event
 	 */
-	startClock($clock, opts) {
+	_startClock($clock, opts) {
 		if (typeof opts != "object") {
 			log.error("Clock opts is not a valid object");
 			return -1;
@@ -327,7 +280,7 @@ class SplashScreen {
 	 * accepts plain strings and objects. String literals are interpreted as
 	 * normal text element. Objects are set using the jQuery API
 	 */
-	initHTML(opts) {
+	_initHTML(opts) {
 		// handle single objects and strings
 		if (!Array.isArray(opts)) {
 			opts = [opts];
@@ -353,4 +306,102 @@ class SplashScreen {
 		}
 
 	}
+
+	/**
+	 * Handles the key events for the SplachScreen and active-inactive events
+	 */
+	_keyHandler(e) {
+		switch (e.keyCode) {
+			case 32:
+			case 13: // Enter key
+				if (this.state == "closed")
+				this._open();
+				break;
+			case 27: // ESC key
+				if (this.state == "open")
+					this._close();
+				else if (this.state == "closed")
+					this._open();
+				break;
+			default:
+				if (this.state == "closed")
+					this._open();
+				break;
+		}
+
+		// stop reset timeout since there has been user activity
+		if (this.state == "open")
+			clearTimeout(this.resetTimeout);
+
+		// trigger active event if the user has been inactive long enough
+		if (!this._isActive())
+			$(this).trigger("active", e);
+	}
+
+	/**
+	* _open and _close will toggle the screen and animate it opening and closing
+	* adds a resetTimeout function to automatically close after a period of user
+	* inactivity
+	*
+	* Uses a state machine consisting of {'open', 'closed', 'moving'}.
+	* Transitions are not possible while the state == moving. This prevents
+	* fillUserSelect from trigger concurrernt transitions which would lead to
+	* undefined behaivour.
+	*/
+	_close()  {
+		if (this.state != "open") {
+			log.warn("Cannot close splash screen when state is: " + this.state);
+			return;
+		}
+
+		this.state = "moving";
+		if (this.transition == "fade") {
+			this.$el.fadeIn("slow", () => {
+				this.state = "closed";
+				this.$content.fadeIn("slow");
+				clearTimeout(this.resetTimeout);
+			});
+		} else if (this.transition == "slide") {
+			this.$el.animate({
+				top: "0"
+			},"slow", "easeOutQuint", () => {
+				this.state = "closed";
+				clearTimeout(this.resetTimeout);
+			});
+		}
+
+
+	}
+	_open() {
+		if (this.state != "closed") {
+			log.warn("Cannot open splash screen when state is: " + this.state);
+			return;
+		}
+		clearTimeout(this.resetTimeout);
+		let reset_duration = 60*1000;
+
+		if (this.state == "open" || this.state == "moving") {
+			this.resetTimeout = setTimeout(this.reset, reset_duration);
+			return;
+		}
+		this.state = "moving";
+
+		if (this.transition == "fade") {
+			this.$content.fadeOut("fast", () => {
+				this.$el.fadeOut(this._ANIMATION_DUR, () => {
+					this.state = "open";
+				});
+			});
+
+		} else if (this.transition == "slide") {
+			this.$el.animate({
+				top: "-100%"
+			}, "slow", "easeInCubic", () => {
+				this.state = "open";
+			});
+		}
+
+
+	}
+
 }
