@@ -62,26 +62,26 @@ class logger {
 			return this.$log.html() + str;
 	}
 	normal (str) {
-		console.log(str);
+		// console.log(str);
 		this.$log.html(this._parse(str,"white"));
 		if (this.$autoscroll.prop('checked'))
 			this.$log[0].scrollTop = this.$log[0].scrollHeight;
 	}
 	error (str) {
-		console.error(str);
+		// console.error(str);
 		this.$log.html(this._parse(str,"red"));
 		if (this.$autoscroll.prop('checked'))
 			this.$log[0].scrollTop = this.$log[0].scrollHeight;
 	}
 	warn (str) {
-		console.warn(str);
+		// console.warn(str);
 		this.$log.html(this._parse(str,"yellow"));
 		if (this.$autoscroll.prop('checked'))
 			this.$log[0].scrollTop = this.$log[0].scrollHeight;
 	}
 
 	debug (str) {
-		console.debug(str);
+		// console.debug(str);
 		this.$log.html(this._parse(str,"lightblue"));
 		if (this.$autoscroll.prop('checked'))
 			this.$log[0].scrollTop = this.$log[0].scrollHeight;

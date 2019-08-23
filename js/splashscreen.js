@@ -1,3 +1,4 @@
+const MOVE_DUR = 300;
 const  DEF_OPT =
 {
 	"fit": true,
@@ -78,9 +79,10 @@ class SplashScreen {
 				this.active_timeout = options["active-timeout"];
 			if (options.filter == true)
 				this.$img.addClass("filter");
-			if (options.vignette == true)
+			if (options.vignette == true) {
 				this.$vignette = $("#vignette");
 				this.$vignette.show();
+			}
 			if (typeof options.content == "object")
 				this.initContent(options.content);
 			console.log("triggering ready for splash");
@@ -136,21 +138,25 @@ class SplashScreen {
 	 * open and close will toggle the screen and animate it opening and closing
 	 * adds a resetTimeout function to automatically close after a period of user
 	 * inactivity */
-	close(time=450)  {
+	close(time=500)  {
 		if (this.state == "closed" || this.state == "moving") {
 			log.warn("Cannot close splash screen when state is: " + this.state);
 			return;
 		}
 
 		this.state = "moving";
-		this.$el.animate({
-			top: "0"
-		}, time, "easeInCubic", () => {
+		// this.$el.css("top", "0");
+		// this.$el.css("opacity", "1");
+
+		this.$el.fadeIn(MOVE_DUR, () => {
+			// this.$el.remove("filter");
 			this.state = "closed";
-			clearTimeout(this.resetTimeout);
+			this.$content.fadeIn("slow")
+			// this.$el.show();
 		});
+
 	}
-	open(time=400) {
+	open(time=300) {
 		if (this.state == "open" || this.state == "moving") {
 			log.warn("Cannot open splash screen when state is: " + this.state);
 			return;
@@ -163,14 +169,44 @@ class SplashScreen {
 			return;
 		}
 		this.state = "moving";
-		this.$el.animate({
-			top: "-100%"
-		}, time, "easeInCubic", () => {
-			this.state = "open";
-			// close the screen after 1 minute of inactivty
-			this.resetTimeout = setTimeout(() => this.reset, reset_duration);
-		});
+
+				this.$content.fadeOut("fast", () => {
+					// this.$el.remove("filter");
+					this.$el.fadeOut(MOVE_DUR, () => {
+						this.state = "open";
+					});
+
+					// this.$el.show();
+				});
+		// this.$el.css("top", "-100%");
+		// this.$el.css("opacity", "0");
+		//
+		//
+		// setTimeout(() => {
+		// 	this.state = "open";
+		// 	this.$el.hide();
+		// }, CSS_MOVE_DUR);
+
+
 	}
+
+ _moveUp($el, cb) {
+	      $el.addClass("move-up");
+	      setTimeout(() => {
+	        $el.css("top", "-100%").removeClass("move-up");
+					if (typeof cb == "function") cb($el);
+	      }, CSS_MOVE_DUR);
+	}
+	_moveDown($el, cb) {
+		$el.addClass("move-down");
+		setTimeout(() => {
+			$el.css("top", "0").removeClass("move-down");
+			if (typeof cb == "function") cb($el);
+		}, CSS_MOVE_DUR);
+	}
+	/**
+	 * Closes the splash screen if there has been no user activity
+	 */
 	reset() {
 		if (this.state == "open") {
 			this.close();
