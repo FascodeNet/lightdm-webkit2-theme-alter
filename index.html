@@ -1,87 +1,25 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<link rel="stylesheet" href="css/materialize.min.css">
-    <style>
-  #splash-screen {
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		z-index: 999;
-		overflow: hidden;
-    background: -webkit-radial-gradient(center, ellipse cover, #4fc3f7 10%, #01579b 100%);
-	}
-
-  #splashscreen * {
-    overflow: hidden;
+  <link rel="stylesheet" href="css/materialize.min.css">
+  <link rel="stylesheet" href="css/splashscreen.css">
+  <style>
+  /* Simple example of css used to stylize the login screen */
+  * {
+    /* webkit2 is very slow, this is supposed to speed up animations */
+    backface-visibility: hidden;
   }
-	.clock {
-		display: none;
-	}
-	#splash-screen-content {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-	}
-	.SplashScreen-screen-img {
-
-/*		height: 100%;
-		width: 100%; */
-		/* border: 8px solid red; */
-	}
-	.filter{
-		filter: blur(4px) contrast(110%) brightness(80%);
-	}
-	.vignette {
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		top: 0;
-		box-shadow: inset 0 0 100px black;
-		z-index: 2;
-    display: none;
-	}
-  /* CSS animations for smoother response, delays have to be hardcoded */
-  .move-up {
-    animation-name: move-up;
-    animation-duration: 500ms;
-  }
-  @keyframes move-up {
-    from {top: 0;}
-    to {top: -100%}
-  }
-
-  .move-up {
-    animation-name: move-up;
-    /* animation-timing-function: ease-in-out; */
-    animation-duration: 700ms; /* has to be hardcoded */
-  }
-  @keyframes move-up {
-    from {top: 0;}
-    to {top: -100%}
-  }
-  .move-down {
-    animation-name: move-down;
-    /* animation-timing-function: ease-in; */
-    animation-duration: 700ms;
-  }
-  @keyframes move-down {
-    from {top: -100%;}
-    to {top: 0}
-  }
-
- body {
-	  display: flex;
+  body {
+    display: flex;
     min-height: 100vh;
     flex-direction: column;
+    color: white;
     background-color: #37474f;
     background: -webkit-radial-gradient(center, ellipse cover, #455a64 10%, #263238 100%);
-    color: white;
     overflow: hidden;
- }
+  }
   main {
-	  flex: 1 0 auto;
+    flex: 1 0 auto;
   }
   input {
     color: white;
@@ -98,7 +36,6 @@
   .power-button:active {
     fill: #4dd0e1;
   }
-
   div#console {
     z-index: 9999;
     position: absolute;
@@ -125,32 +62,31 @@
 
   </style>
 </head>
+<!-- Load dependencies -->
 <script src="js/jquery-3.4.1.min.js"></script>
 <script src="js/moment-with-locales.js"></script>
 <script src="js/jquery-ui.min.js"></script>
 <script src="js/materialize.min.js"></script>
 <!-- <script src="js/lightdm-sample.js"></script> -->
-<!--  Load Plugins -->
+
+<!-- Load Utility functions -->
+<script src="js/_utils.js"></script>
+
+<!--  Load Plugins first -->
 <script src="js/splashscreen.js"></script>
-<!-- Load main theme -->
+<!-- <script src="js/another_plugin.js"></script> -->
+
+<!-- Load Login Manager, depends on plugins -->
+<script src="js/LoginManager.js"></script>
+
+<!-- Load example theme -->
 <script src="js/theme.js"></script>
 
 <body>
-  <div id="splash-screen">
-    <!--TODO autogenerate this content -->
-    <img class="splash-screen-img" src="images/splash-screen.jpg">
-    <div class="vignette"></div>
-    <div id="splash-screen-content">
-      <!--Content will be generated here -->
-    </div>
-  </div>
-
   <header></header>
-	<main>
-		<div class="container">
-
+  <main>
+    <div class="container">
       <div class="row" style="margin-top: 15vh;"></div>
-
 
       <div class="row">
         <div style="width: 100%; text-align: center"  class="col s12">
@@ -164,36 +100,33 @@
         </div>
       </div>
 
-      <!-- <div class="row" style="margin-top: 10vh;"></div> -->
-			<div class="row ">
-				<!-- User Select -->
-				<div class="row">
-					<div class="input-field col s4 offset-s4">
-						<select id="selectUser"></select>
-						<label>User</label>
-					</div>
-				</div>
+      <!-- User & Password Selections  -->
+      <div class="row ">
+        <!-- User Select -->
+        <div class="row">
+          <div class="input-field col s4 offset-s4">
+            <select id="selectUser"></select>
+            <label>User</label>
+          </div>
+        </div>
 
-				<!-- Password field -->
-				<div class="row">
-					<div class="input-field col s4 offset-s4">
-						<input id="inputPassword" type="password">
-						<label for="inputPassword">Password</label>
-					</div>
-				</div>
+        <!-- Password field -->
+        <div class="row">
+          <div class="input-field col s4 offset-s4">
+            <input id="inputPassword" type="password">
+            <label for="inputPassword">Password</label>
+          </div>
+        </div>
         <!-- End Password field -->
-
       </div>
-		</div>
+      <!-- End User & Password Selections  -->
 
+    </div>
+  </main>
 
-	</main>
-
-
-  <footer class="">
-
+<!-- Bottom footer contains Session selection & power buttons -->
+  <footer >
     <div class="row">
-
       <!-- Window Manager Select -->
       <div class="input-field col s2 offset-s1">
         <select id="selectSession"></select>
@@ -201,171 +134,97 @@
       </div>
       <!-- End Window Manager Select -->
 
+      <!-- Power button column  -->
       <div class="col right">
-          <div class="row">
-            <!-- Hibernate Button -->
-            <div  id="buttonHibernate" class="col S4">
-              <svg viewBox="0 0 297.613 297.613" width="40px" height="40px" class="power-button">
-                <g>
-                  <path d="M148.807,50.869c-4.971,0-9,4.029-9,9v46.438c0,4.971,4.029,9,9,9s9-4.029,9-9V59.869
-                    C157.807,54.898,153.777,50.869,148.807,50.869z"/>
-                  <path d="M178.859,127.754c2.303,0,4.606-0.879,6.364-2.636L212.17,98.17c3.515-3.515,3.515-9.213,0-12.728
-                  c-3.515-3.515-9.213-3.515-12.728,0l-26.948,26.948c-3.515,3.515-3.515,9.213,0,12.728
-                  C174.252,126.875,176.556,127.754,178.859,127.754z"/>
-                  <path d="M237.744,139.807h-46.438c-4.971,0-9,4.029-9,9s4.029,9,9,9h46.438c4.971,0,9-4.029,9-9S242.715,139.807,237.744,139.807z"
-                  />
-                  <path d="M185.22,172.493c-3.515-3.515-9.213-3.515-12.728,0c-3.515,3.515-3.515,9.213,0,12.728l26.95,26.95
-                  c1.757,1.757,4.061,2.636,6.364,2.636s4.606-0.879,6.364-2.636c3.515-3.515,3.515-9.213,0-12.728L185.22,172.493z"/>
-                  <path d="M148.807,182.307c-4.971,0-9,4.029-9,9v46.438c0,4.971,4.029,9,9,9s9-4.029,9-9v-46.438
-                  C157.807,186.336,153.777,182.307,148.807,182.307z"/>
-                  <path d="M112.391,172.495l-26.948,26.948c-3.515,3.515-3.515,9.213,0,12.728c1.757,1.757,4.061,2.636,6.364,2.636
-                  s4.606-0.879,6.364-2.636l26.948-26.948c3.515-3.515,3.515-9.213,0-12.728C121.604,168.98,115.905,168.98,112.391,172.495z"/>
-                  <path d="M115.307,148.807c0-4.971-4.029-9-9-9H59.869c-4.971,0-9,4.029-9,9s4.029,9,9,9h46.438
-                  C111.277,157.807,115.307,153.777,115.307,148.807z"/>
-                  <path d="M98.17,85.443c-3.515-3.515-9.213-3.515-12.728,0c-3.515,3.515-3.515,9.213,0,12.728l26.95,26.95
-                  c1.757,1.757,4.061,2.636,6.364,2.636s4.606-0.879,6.364-2.636c3.515-3.515,3.515-9.213,0-12.728L98.17,85.443z"/>
-                  <path d="M148.807,0C66.754,0,0,66.754,0,148.807s66.754,148.807,148.807,148.807s148.807-66.754,148.807-148.807
-                  S230.859,0,148.807,0z M148.807,279.613C76.68,279.613,18,220.934,18,148.807S76.68,18,148.807,18s130.807,58.68,130.807,130.807
-                  S220.934,279.613,148.807,279.613z"/>
-                </g>
-              </svg>
-                <!-- <img id="buttonHibernate" class="right power-button" src="images/hibernate.svg" width="40px" height="40px"> -->
-            </div>
-            <!-- End Hibernate Button -->
-            <!-- Restart Button -->
-            <div id="buttonRestart" class="col s4">
-              <svg class="power-button"  height="40px" width="40px" viewBox="0 0 1000 1000" >
-                <g>
-                  <path d="M506,984.1c-98.1,0-192.5-29.2-273.1-84.4C154.1,845.9,93.6,770.9,
-                    57.6,682.9c-9.9-24.3-17.9-49.6-23.7-75.2c-3.2-13.9,5.5-27.7,
-                    19.4-30.9c13.9-3.2,27.7,5.5,30.9,19.4c5.2,22.8,12.3,45.4,21.2,67.1C137.5,
-                    742,191.6,809,262,857.2c72,49.3,156.4,75.3,244,75.3c238.5,0,432.5-194,
-                    432.5-432.5c0-238.5-194-432.5-432.5-432.5c-87.6,0-172,26-244,75.3C191.7,191,
-                    137.5,257.9,105.4,336.5C100,349.7,85,356,71.8,
-                    350.7c-13.2-5.4-19.5-20.4-14.1-33.6c35.9-88,96.5-162.9,
-                    175.2-216.8c80.6-55.2,175-84.3,273.1-84.3c129.3,0,250.8,50.4,
-                    342.3,141.8C939.6,249.1,990,370.7,990,500c0,129.3-50.4,250.9-141.8,
-                    342.3C756.8,933.7,635.2,984.1,506,984.1z"/>
-                    <path d="M82.3,352.6c-10.5,0-20.3-6.5-24.1-16.8L11.6,211.6c-5-13.3,1.8-28.2,
-                      15.1-33.2c13.3-5,28.2,1.8,33.2,15.1l38.5,102.8l106.2-26.1c13.8-3.4,27.8,
-                      5.1,31.2,18.9c3.4,13.8-5.1,27.8-18.9,31.2L88.4,351.8C86.4,352.3,84.3,
-                      352.6,82.3,352.6z"/>
-                  </g>
-              </svg>
-
-                <!-- <img id="buttonRestart" class="power-button" src="images/restart.svg" width="40px" height="40px"> -->
-            </div>
-            <!-- End Restart Button -->
-            <!-- Shutdown Button -->
-            <div id="buttonShutdown" class="col s4">
-
-              <svg class="power-button"  height="40px" width="40px" viewBox="0 0 56 56">
+        <div class="row">
+          <!-- Hibernate Button -->
+          <div  id="buttonHibernate" class="col S4">
+            <svg viewBox="0 0 297.613 297.613" width="40px" height="40px" class="power-button">
               <g>
-              	<path d="M35.31,5.042c-0.532-0.155-1.085,0.15-1.24,0.68s0.149,
-                  1.085,0.68,1.24C44.906,9.932,52,19.405,52,30c0,13.233-10.767,
-                  24-24,24S4,43.233,4,30C4,19.392,11.105,9.915,21.279,
-                  6.953c0.53-0.154,0.835-0.709,0.681-1.239
-              		c-0.153-0.53-0.708-0.839-1.239-0.681C9.698,8.241,2,18.508,2,
-                  30c0,14.337,
-              		11.663,26,26,26s26-11.663,26-26
-              		C54,18.522,46.314,8.26,35.31,5.042z"/>
-              	<path d="M28,27c0.553,0,1-0.447,1-1V1c0-0.553-0.447-1-1-1s-1,
-                  0.447-1,1v25C27,
-              		26.553,27.447,27,28,27z"/>
+                <path d="M148.807,50.869c-4.971,0-9,4.029-9,9v46.438c0,4.971,4.029,9,9,9s9-4.029,9-9V59.869
+                C157.807,54.898,153.777,50.869,148.807,50.869z"/>
+                <path d="M178.859,127.754c2.303,0,4.606-0.879,6.364-2.636L212.17,98.17c3.515-3.515,3.515-9.213,0-12.728
+                c-3.515-3.515-9.213-3.515-12.728,0l-26.948,26.948c-3.515,3.515-3.515,9.213,0,12.728
+                C174.252,126.875,176.556,127.754,178.859,127.754z"/>
+                <path d="M237.744,139.807h-46.438c-4.971,0-9,4.029-9,9s4.029,9,9,9h46.438c4.971,0,9-4.029,9-9S242.715,139.807,237.744,139.807z"
+                />
+                <path d="M185.22,172.493c-3.515-3.515-9.213-3.515-12.728,0c-3.515,3.515-3.515,9.213,0,12.728l26.95,26.95
+                c1.757,1.757,4.061,2.636,6.364,2.636s4.606-0.879,6.364-2.636c3.515-3.515,3.515-9.213,0-12.728L185.22,172.493z"/>
+                <path d="M148.807,182.307c-4.971,0-9,4.029-9,9v46.438c0,4.971,4.029,9,9,9s9-4.029,9-9v-46.438
+                C157.807,186.336,153.777,182.307,148.807,182.307z"/>
+                <path d="M112.391,172.495l-26.948,26.948c-3.515,3.515-3.515,9.213,0,12.728c1.757,1.757,4.061,2.636,6.364,2.636
+                s4.606-0.879,6.364-2.636l26.948-26.948c3.515-3.515,3.515-9.213,0-12.728C121.604,168.98,115.905,168.98,112.391,172.495z"/>
+                <path d="M115.307,148.807c0-4.971-4.029-9-9-9H59.869c-4.971,0-9,4.029-9,9s4.029,9,9,9h46.438
+                C111.277,157.807,115.307,153.777,115.307,148.807z"/>
+                <path d="M98.17,85.443c-3.515-3.515-9.213-3.515-12.728,0c-3.515,3.515-3.515,9.213,0,12.728l26.95,26.95
+                c1.757,1.757,4.061,2.636,6.364,2.636s4.606-0.879,6.364-2.636c3.515-3.515,3.515-9.213,0-12.728L98.17,85.443z"/>
+                <path d="M148.807,0C66.754,0,0,66.754,0,148.807s66.754,148.807,148.807,148.807s148.807-66.754,148.807-148.807
+                S230.859,0,148.807,0z M148.807,279.613C76.68,279.613,18,220.934,18,148.807S76.68,18,148.807,18s130.807,58.68,130.807,130.807
+                S220.934,279.613,148.807,279.613z"/>
               </g>
-              </svg>
-                <!-- <img id="buttonShutdown" class="power-button" src="images/shutdown.svg" width="40px" height="40px"> -->
-            </div>
-            <!-- End Shutdown Button -->
+            </svg>
+            <!-- <img id="buttonHibernate" class="right power-button" src="images/hibernate.svg" width="40px" height="40px"> -->
           </div>
-      </div>
+          <!-- End Hibernate Button -->
+          <!-- Restart Button -->
+          <div id="buttonRestart" class="col s4">
+            <svg class="power-button"  height="40px" width="40px" viewBox="0 0 1000 1000" >
+              <g>
+                <path d="M506,984.1c-98.1,0-192.5-29.2-273.1-84.4C154.1,845.9,93.6,770.9,
+                57.6,682.9c-9.9-24.3-17.9-49.6-23.7-75.2c-3.2-13.9,5.5-27.7,
+                19.4-30.9c13.9-3.2,27.7,5.5,30.9,19.4c5.2,22.8,12.3,45.4,21.2,67.1C137.5,
+                742,191.6,809,262,857.2c72,49.3,156.4,75.3,244,75.3c238.5,0,432.5-194,
+                432.5-432.5c0-238.5-194-432.5-432.5-432.5c-87.6,0-172,26-244,75.3C191.7,191,
+                137.5,257.9,105.4,336.5C100,349.7,85,356,71.8,
+                350.7c-13.2-5.4-19.5-20.4-14.1-33.6c35.9-88,96.5-162.9,
+                175.2-216.8c80.6-55.2,175-84.3,273.1-84.3c129.3,0,250.8,50.4,
+                342.3,141.8C939.6,249.1,990,370.7,990,500c0,129.3-50.4,250.9-141.8,
+                342.3C756.8,933.7,635.2,984.1,506,984.1z"/>
+                <path d="M82.3,352.6c-10.5,0-20.3-6.5-24.1-16.8L11.6,211.6c-5-13.3,1.8-28.2,
+                15.1-33.2c13.3-5,28.2,1.8,33.2,15.1l38.5,102.8l106.2-26.1c13.8-3.4,27.8,
+                5.1,31.2,18.9c3.4,13.8-5.1,27.8-18.9,31.2L88.4,351.8C86.4,352.3,84.3,
+                352.6,82.3,352.6z"/>
+              </g>
+            </svg>
 
+            <!-- <img id="buttonRestart" class="power-button" src="images/restart.svg" width="40px" height="40px"> -->
+          </div>
+          <!-- End Restart Button -->
+          <!-- Shutdown Button -->
+          <div id="buttonShutdown" class="col s4">
+
+            <svg class="power-button"  height="40px" width="40px" viewBox="0 0 56 56">
+              <g>
+                <path d="M35.31,5.042c-0.532-0.155-1.085,0.15-1.24,0.68s0.149,
+                1.085,0.68,1.24C44.906,9.932,52,19.405,52,30c0,13.233-10.767,
+                24-24,24S4,43.233,4,30C4,19.392,11.105,9.915,21.279,
+                6.953c0.53-0.154,0.835-0.709,0.681-1.239
+                c-0.153-0.53-0.708-0.839-1.239-0.681C9.698,8.241,2,18.508,2,
+                30c0,14.337,
+                11.663,26,26,26s26-11.663,26-26
+                C54,18.522,46.314,8.26,35.31,5.042z"/>
+                <path d="M28,27c0.553,0,1-0.447,1-1V1c0-0.553-0.447-1-1-1s-1,
+                0.447-1,1v25C27,
+                26.553,27.447,27,28,27z"/>
+              </g>
+            </svg>
+            <!-- <img id="buttonShutdown" class="power-button" src="images/shutdown.svg" width="40px" height="40px"> -->
+          </div>
+          <!-- End Shutdown Button -->
+        </div>
+      </div>
+      <!-- End Power button column  -->
     </div>
   </footer>
-<script>
 
-// hide enverything until fully loaded
-$("body").append(`<div id="block" style="position: absolute;background-color: black;
-width: 100%; height: 100vh; z-index:9999;"></div>`);
+  <script>
 
-// pass true to show logger output
-const log = new logger(false);
-
-// create singleton
-const greeter = new LoginManager();
-
-// called after greeter and lightdm are initialized
-$(greeter).on("ready", function(e) {
-
-  let $user = $("#selectUser");
-  let $session = $("#selectSession");
-  let $password = $("#inputPassword");
-
-  greeter.fillUserSelect($user);
-  greeter.fillSessionSelect($session);
-
-
-  /* Bind shutdown, restart hibernate and suspend to the
-      appropriate buttons */
-  $("#buttonPoweroff").click(function() {
-      greeter.shutdown();
-  });
-  $("#buttonRestart").click(function() {
-      greeter.restart();
-  });
-  $("#hibernate").click(function() {
-      greeter.hibernate();
-  });
-
-
-  $password.keypress((e) => {
-    // user has typed, remove placeholder and invalid class
-    $password.prop("placeholder", "").removeClass("invalid");
-
-    /* attempt authentication, 'grant' event will be emitted on sucecss
-    and 'deny' will be emitted on failure */
-    if (e.keyCode == 13) {
-      let username = $user.children("option:selected").val();
-      let pass = $password.val();
-      log.debug("attempt authenticate with: " + username + " " + pass);
-      greeter.auth(username, pass);
-    }
-
-  });
-
-
-  // when the user is authenticated do transitions and login
-	$(greeter).on("grant", () => {
-    let session_key = $session.children("option:selected").val();
-    greeter.login(session_key);
-	})
-  .on("deny", () => {
-    // inform the user that the credentials are invalid
-    $password.removeClass("valid").addClass("invalid");
-    $password.val("").prop("placeholder", "Incorrect Password");
-  });
-
-	$(greeter.plugins.SplashScreen).on("active", function() {
-		$(".active-appear").fadeIn();
-	}).on("inactive", function() {
-		$(".active-appear").fadeOut();
-	});
-
-  setTimeout(() => $("#block").remove(), dur=1);
-});
-
-
-</script>
-<script>
-  /*
-	 * Define this fuction so lightdm doesnt crash, gets resassigned
-   * in login manager
-	 */
-	window.authentication_complete = function() {
-
-	};
-
-
-</script>
+    /* Use custom logging for debugging without a browser.
+       Pass true to show logger output on screen */
+    const log = new Logger(false);
+    /* Define this fuction so lightdm doesn't crash, gets redefined
+    in login manager. */
+    window.authentication_complete = function() {};
+  </script>
 </body>
 </html>

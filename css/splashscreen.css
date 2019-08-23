@@ -1,0 +1,64 @@
+#splash-screen {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 999;
+  overflow: hidden;
+  background: -webkit-radial-gradient(center, ellipse cover, #4fc3f7 10%, #01579b 100%);
+}
+
+#splashscreen * {
+  overflow: hidden;
+}
+.clock {
+  display: none;
+}
+#splash-screen-content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+}
+.SplashScreen-screen-img {
+ /* nothing here right now */
+}
+.filter{
+  filter: blur(4px) contrast(110%) brightness(80%);
+}
+.vignette {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  box-shadow: inset 0 0 100px black;
+  z-index: 2;
+  display: none;
+}
+/* CSS animations for smoother response, delays have to be hardcoded */
+.move-up {
+  animation-name: move-up;
+  animation-duration: 500ms;
+}
+@keyframes move-up {
+  from {top: 0;}
+  to {top: -100%}
+}
+
+.move-up {
+  animation-name: move-up;
+  /* animation-timing-function: ease-in-out; */
+  animation-duration: 700ms; /* has to be hardcoded */
+}
+@keyframes move-up {
+  from {top: 0;}
+  to {top: -100%}
+}
+.move-down {
+  animation-name: move-down;
+  /* animation-timing-function: ease-in; */
+  animation-duration: 700ms;
+}
+@keyframes move-down {
+  from {top: -100%;}
+  to {top: 0}
+}

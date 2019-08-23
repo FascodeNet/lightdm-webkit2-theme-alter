@@ -3,6 +3,7 @@
 	"filter": false,
 	"vignette": true,
 	"active-timeout": 15,
+	"img": false,
 	"transition": "fade",
 	"content": {
 		"clock": [{
