@@ -145,18 +145,11 @@ class SplashScreen {
 		}
 
 		this.state = "moving";
-<<<<<<< HEAD
 		// this.$el.css("top", "0");
 		// this.$el.css("opacity", "1");
 
 		this.$el.fadeIn(MOVE_DUR, () => {
 			// this.$el.remove("filter");
-=======
-		this.$el.animate({
-			top: "0",
-			filter: "blur(20px)"
-		}, time, "easeOutQuint", () => {
->>>>>>> c1d727d6c4753e967cdd3e9df93db3bf993eb389
 			this.state = "closed";
 			this.$content.fadeIn("slow")
 			// this.$el.show();
@@ -176,7 +169,6 @@ class SplashScreen {
 			return;
 		}
 		this.state = "moving";
-<<<<<<< HEAD
 
 				this.$content.fadeOut("fast", () => {
 					// this.$el.remove("filter");
@@ -204,15 +196,6 @@ class SplashScreen {
 	        $el.css("top", "-100%").removeClass("move-up");
 					if (typeof cb == "function") cb($el);
 	      }, CSS_MOVE_DUR);
-=======
-		this.$el.animate({
-			top: "-100%"
-		}, time, "easeInCirc", () => {
-			this.state = "open";
-			// close the screen after 1 minute of inactivty
-			this.resetTimeout = setTimeout(() => this.reset, reset_duration);
-		});
->>>>>>> c1d727d6c4753e967cdd3e9df93db3bf993eb389
 	}
 	_moveDown($el, cb) {
 		$el.addClass("move-down");
