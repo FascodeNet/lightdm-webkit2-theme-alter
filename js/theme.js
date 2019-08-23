@@ -41,12 +41,11 @@ $(greeter).on("ready", function(e) {
 		// user has typed, remove placeholder and invalid class
 		$password.prop("placeholder", "").removeClass("invalid");
 
-		/* attempt authentication, 'grant' event will be emitted on sucecss
+		/* Attempt authentication, 'grant' event will be emitted on sucecss
 		and 'deny' will be emitted on failure */
 		if (e.keyCode == 13) {
 			let username = $user.children("option:selected").val();
 			let pass = $password.val();
-			log.debug("attempt authenticate with: " + username + " " + pass);
 			greeter.auth(username, pass);
 		}
 
