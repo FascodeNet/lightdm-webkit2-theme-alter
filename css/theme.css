@@ -53,3 +53,6 @@ div#console .terminal text {
   font-size: 3vh;
   font-weight: lighter;
 }
+.logo {
+  height: 10vh;
+}
