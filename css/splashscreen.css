@@ -4,9 +4,11 @@
   position: absolute;
   z-index: 999;
   overflow: hidden;
-  background: -webkit-radial-gradient(center, ellipse cover, #4fc3f7 10%, #01579b 100%);
+  background-color: #e57373;
+  background: linear-gradient(45deg, rgba(255,206,202,1) 1%,rgba(227,110,201,1) 84%);
+  background: linear-gradient(45deg, rgba(135,165,255,1) 1%,rgba(91,247,231,1) 84%);
+  background: linear-gradient(45deg, rgba(135,165,255,1) 0%,rgba(255,196,211,1) 58%,rgba(195,247,231,1) 87%,rgba(91,247,231,1) 110%);
 }
-
 #splashscreen * {
   overflow: hidden;
 }
@@ -33,32 +35,4 @@
   box-shadow: inset 0 0 100px black;
   z-index: 2;
   display: none;
-}
-/* CSS animations for smoother response, delays have to be hardcoded */
-.move-up {
-  animation-name: move-up;
-  animation-duration: 500ms;
-}
-@keyframes move-up {
-  from {top: 0;}
-  to {top: -100%}
-}
-
-.move-up {
-  animation-name: move-up;
-  /* animation-timing-function: ease-in-out; */
-  animation-duration: 700ms; /* has to be hardcoded */
-}
-@keyframes move-up {
-  from {top: 0;}
-  to {top: -100%}
-}
-.move-down {
-  animation-name: move-down;
-  /* animation-timing-function: ease-in; */
-  animation-duration: 700ms;
-}
-@keyframes move-down {
-  from {top: -100%;}
-  to {top: 0}
 }

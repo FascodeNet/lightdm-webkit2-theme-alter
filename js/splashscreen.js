@@ -42,7 +42,7 @@ class SplashScreen {
             "font-size": "70pt",
             "font-family": "Noto Sans",
             "font-weight": "lighter",
-            "text-shadow": "rgba(0, 0, 0, 0.5) 0px 7px 10px",
+            "text-shadow": "rgba(0, 0, 0, 0.25) 0px 3px 3px",
           }
         },{
           "format": ["h:mm", "A"],
@@ -55,7 +55,7 @@ class SplashScreen {
             "color": "white",
             "font-family": "Noto Sans",
             "text-align": "center",
-            "text-shadow": "rgba(0, 0, 0, 0.5) 0px 7px 10px",
+            "text-shadow": "rgba(0, 0, 0, 0.25) 0px 3px 3px",
           }
         }],
 
