@@ -1,5 +1,5 @@
 # $name
-###  A customizable lightdm-webkit2-greeter interface
+###  A customizable interface for lightdm-webkit2-greeter
 
 ## Examples
 
