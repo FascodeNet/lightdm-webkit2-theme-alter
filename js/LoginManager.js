@@ -35,7 +35,7 @@ class LoginManager {
 			});
 		}
 
-		/****************** Private Implementation Functions ************************/
+		/****************** Private Implementation Functions **********************/
 
 		/**
 		 * Creates each plugin listed in the user config
@@ -74,7 +74,7 @@ class LoginManager {
 			}
 		}
 
-		/*************************** Public Functions *******************************/
+		/*************************** Public Functions *****************************/
 
 		/**
 		* Asyncrhonously authenticates a user
@@ -107,7 +107,7 @@ class LoginManager {
 			}
 			let auth_complete_cb = () => { // called as a result of respond
 				if (typeof callback == "function")
-				callback(this.lightdm.is_authenticated);
+				    callback(this.lightdm.is_authenticated);
 
 				$(this).trigger(this.lightdm.is_authenticated ? "grant" : "deny");
 			}
@@ -131,7 +131,7 @@ class LoginManager {
 		 * Should be called after this.auth() Provides additonal error checking.
 		 */
 		login(session_key) {
-			if (!this.lightdm.sessions.find(x => x.key == session_key)) {
+			if (!this.lightdm.sessions.find((x) => x.key == session_key)) {
 				log.error("Attempting to login without a valid session.");
 				return;
 			}
@@ -140,6 +140,14 @@ class LoginManager {
 				log.error("Attempting to login without authentication.");
 				return;
 			}
+
+
+      // store selected options in the cache
+      try {
+        localStorage.setItem("user", username);
+        localStorage.setItem("session", session_key);
+      } catch(e) {}
+
 			this.lightdm.start_session_sync(session_key);
 		}
 
@@ -147,7 +155,8 @@ class LoginManager {
 		 * Provide facilities to easily fill selection boxes given a jQuery selected
 		 * object.
 		 *
-		 * Automatically removes expired entries from select dropdown.
+		 * Automatically removes expired entries from select dropdown and handles
+     * caching
 		 */
 		fillUserSelect($el) {
 			if (!Array.isArray(this.lightdm.users)) {
@@ -157,7 +166,17 @@ class LoginManager {
 
 			$el.empty();
 			for (let s of this.lightdm.users)
-			$el.append("<option value=" + s.username + ">" + s.display_name + "</option>");
+			   $el.append("<option value=" + s.username + ">" + s.display_name + "</option>");
+
+        // use cache values if available
+       try  {
+         let prev = localStorage.getItem("user");
+         // make sure the stored user is valid
+         let user = this.lightdm.sessions.find((x) => x.username == prev)
+         if (user)
+            $el.val(user.username);
+       } catch (e) {}
+
 			$el.formSelect();
 		}
 		fillSessionSelect($el) {
@@ -165,12 +184,18 @@ class LoginManager {
 				log.warn("No sessions to fill in lightdm's list.");
 				return;
 			}
-
 			$el.empty();
-
 			for (let s of this.lightdm.sessions)
-			$el.append("<option value=" + s.key + ">" + s.name + "</option>");
+    			$el.append("<option value=" + s.key + ">" + s.name + "</option>");
 
+       // use cache values if available
+       try  {
+         let prev = localStorage.getItem("session");
+         // make sure the stored session is valid
+         let session = this.lightdm.sessions.find((x) => x.name == prev)
+         if (session)
+            $el.val(session.name);
+       } catch (e) {}
 
 			$el.formSelect();
 		}

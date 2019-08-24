@@ -22,13 +22,14 @@ input {
   fill: grey !important;
 }
 .power-button {
-  fill: white;
+  fill: #bdc3c7;
 }
 .power-button:hover {
-  fill: #01579b;
+  fill: #ecf0f1;
 }
 .power-button:active {
-  fill: #4dd0e1;
+  fill: white;
+  transform: scale(0.95);
 }
 div#console {
   z-index: 9999;

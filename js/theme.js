@@ -24,6 +24,8 @@ $(greeter).on("ready", function(e) {
 	greeter.fillUserSelect($user);
 	greeter.fillSessionSelect($session);
 
+
+
 	/* Bind shutdown, restart hibernate and suspend to the
 	appropriate buttons */
 	$("#buttonPoweroff").click(function() {
