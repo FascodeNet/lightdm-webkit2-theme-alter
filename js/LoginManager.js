@@ -20,6 +20,7 @@ class LoginManager {
 
 			// begin intializing once the DOM has finished loading
 			$(document).ready(() => {
+
 				/* read config file, use defaults on failure, since config is in JSON
 				reading mut be async */
 				$.getJSON("json/LoginManager.json", (data) => {
@@ -106,6 +107,10 @@ class LoginManager {
 				this.lightdm.respond(password);
 			}
 			let auth_complete_cb = () => { // called as a result of respond
+        try { // attempt to cache selcted username
+          localStorage.setItem("user", username);
+        } catch(e) {};
+
 				if (typeof callback == "function")
 				    callback(this.lightdm.is_authenticated);
 
@@ -140,15 +145,14 @@ class LoginManager {
 				log.error("Attempting to login without authentication.");
 				return;
 			}
-
+      log.normal(`storing:: ${session_key}`);
 
       // store selected options in the cache
       try {
-        localStorage.setItem("user", username);
         localStorage.setItem("session", session_key);
-      } catch(e) {}
+      } catch(e) {};
 
-			this.lightdm.start_session_sync(session_key);
+      this.lightdm.start_session_sync(session_key);
 		}
 
 		/**
@@ -192,7 +196,8 @@ class LoginManager {
        try  {
          let prev = localStorage.getItem("session");
          // make sure the stored session is valid
-         let session = this.lightdm.sessions.find((x) => x.name == prev)
+         let session = this.lightdm.sessions.find((x) => x.name == prev);
+
          if (session)
             $el.val(session.name);
        } catch (e) {}
