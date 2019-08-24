@@ -5,8 +5,12 @@ standard lightdm interface */
 
 /* add a black box to hide enverything while its still loading,
 this will be removed after LoginManager triggers its 'ready' event. */
-$("body").append(`<div id="block" style="position: absolute;background-color: black;
-width: 100%; height: 100vh; z-index:9999;"></div>`);
+var $cover = $(`<div id="block" style="position: absolute;
+background-color: black;width: 100%; height: 100vh; z-index:9999;"></div>`);
+
+$(document).ready(() => {
+	$("body").append($cover);
+});
 
 // create singleton
 const greeter = new LoginManager();
@@ -24,7 +28,7 @@ $(greeter).on("ready", function(e) {
 	greeter.fillUserSelect($user);
 	greeter.fillSessionSelect($session);
 
-	
+
 
 	/* Bind shutdown, restart hibernate and suspend to the
 	appropriate buttons */
@@ -56,7 +60,8 @@ $(greeter).on("ready", function(e) {
 	// when the user is authenticated, do a transition and login
 	$(greeter).on("grant", () => {
 		let session_key = $session.children("option:selected").val();
-		greeter.login(session_key);
+
+		$cover.fadeIn("slow", () => greeter.login(session_key));
 	})
 	.on("deny", () => {
 		// inform the user that the credentials are invalid
@@ -74,5 +79,5 @@ $(greeter).on("ready", function(e) {
 	/* Once everything else has loaded, its  safe to remove the black screen
 	hiding the dom. Do it async so that all currently running async
 	functions have a chance to complete */
-	setTimeout(() => $("#block").remove(), dur=1);
+	setTimeout(() => $cover.fadeOut(), dur=1);
 });
