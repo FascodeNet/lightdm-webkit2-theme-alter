@@ -40,15 +40,16 @@ class Logger {
 			</div>
 			</div>
 			<!-- End Debug Console -->`);
-
+      this.$log= $("#console .terminal");
+      this.$autoscroll = $("#console input");
+      this.$buttonTrigger = $("#buttonTrigger");
+      
 			window.onerror = (e) => {
 				this.error(e);
 			};
 
 			$(document).ready(() => {
-				this.$log= $("#console .terminal");
-				this.$autoscroll = $("#console input");
-				this.$buttonTrigger = $("#buttonTrigger");
+
 
 				this.$log.keypress(function(e) {
 					e.preventDefault();
