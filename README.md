@@ -31,7 +31,7 @@ Next clone the this repo and copy it to the webkit2 themes folder. (You will nee
 root permission for the copy)
 
 ```
-$ git clone https://github.com/jelenis/LoginManager.js.git
+$ git clone https://github.com/jelenis/login-manager.git
 # cp -r lightdm-theme /usr/share/lightdm-webkit/themes/
 ```
 
