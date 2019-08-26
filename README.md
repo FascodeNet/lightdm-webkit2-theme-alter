@@ -1,14 +1,15 @@
 # Greeter.js
-####  A lightweight framework to help create high quality greeter themes for  Lightdm Webkit2.
+####  A lightweight framework to help create high quality themes for  Lightdm Greeter.
 
 ## Description
 ### Easily create  your own Linux greeter
 
-![preview](doc/example.gif)
-## Examples
-![splash-screen-sample](doc/example_01.png)
+![](doc/example.gif)
 
-![splash-screen-sample](doc/example_02.png)
+## Examples
+![](doc/example_01.png)
+
+![](doc/example_04.png)
 
 ## Installation
 Install the lightdm and its webkit greeter, make sure that no other version of lightdm is installed on your system.
