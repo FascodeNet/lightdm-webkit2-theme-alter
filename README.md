@@ -35,12 +35,12 @@ $ git clone https://github.com/jelenis/login-manager.git
 # cp -r lightdm-theme /usr/share/lightdm-webkit/themes/
 ```
 
-Lastly, set the value of theme in `/etc/lightdm/lightdm-webkit2-greeter.conf` to LoginManager.js
-
+Lastly, set the value of theme in `/etc/lightdm/lightdm-webkit2-greeter.conf` to lightdm-theme
+(or a custom name of your choice set in `index.theme`)
 ```
 [greeter]
 ...
-webkit_theme = LoginManager.js
+webkit_theme=lightdm-theme
 ```
 
 ## Screenshots
