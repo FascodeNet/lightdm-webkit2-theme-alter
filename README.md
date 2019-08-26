@@ -1,7 +1,14 @@
-# $name
-###  A customizable interface for lightdm-webkit2-greeter
-![](doc/example.gif)
+# Greeter.js
+####  A lightweight framework to help create high quality greeter themes for  Lightdm Webkit2.
+
+## Description
+### Easily create  your own Linux greeter
+
+![preview](doc/example.gif)
 ## Examples
+![splash-screen-sample](doc/example_01.png)
+
+![splash-screen-sample](doc/example_02.png)
 
 ## Installation
 Install the lightdm and its webkit greeter, make sure that no other version of lightdm is installed on your system.
@@ -26,16 +33,16 @@ Next clone the this repo and copy it to the webkit2 themes folder. (You will nee
 root permission for the copy)
 
 ```
-$ git clone https://github.com/jelenis/$name.git
+$ git clone https://github.com/jelenis/greeter.js.git
 # cp -r lightdm-theme /usr/share/lightdm-webkit/themes/
 ```
 
-Lastly, set the value of theme in `/etc/lightdm/lightdm-webkit2-greeter.conf` to $name
+Lastly, set the value of theme in `/etc/lightdm/lightdm-webkit2-greeter.conf` to greeter.js
 
 ```
 [greeter]
 ...
-webkit_theme = $name
+webkit_theme = greeter.js
 ```
 ## Usage
 ### Basic Usage
