@@ -1,6 +1,6 @@
 # $name
 ###  A customizable interface for lightdm-webkit2-greeter
-
+![](doc/example.gif)
 ## Examples
 
 ## Installation
@@ -158,7 +158,7 @@ config file. The code will generate the content on this splash
 ```
 
 ###### Content: Clocks
-![splash-screen-sample](images/splash-screen-sample.png)
+![splash-screen-sample](doc/splash-screen-sample.png)
 
 The date in the sample image above is created and automatically
 updated with the following clock object. You can use custom CSS to style and
