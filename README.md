@@ -1,15 +1,12 @@
-# Greeter.js
-####  A lightweight framework to help create high quality themes for  Lightdm Greeter.
+# LoginManager.js
 
-## Description
-### Easily create  your own Linux greeter
+## About
+#### Easily design your own Linux greeter without having to worry about the implementation.
+An event based interface for creating fully customizable Linux login themes
+using Lightdm's Webkit2 Greeter.
+
 
 ![](doc/example.gif)
-
-## Examples
-![](doc/example_01.png)
-
-![](doc/example_04.png)
 
 ## Installation
 Install the lightdm and its webkit greeter, make sure that no other version of lightdm is installed on your system.
@@ -34,17 +31,23 @@ Next clone the this repo and copy it to the webkit2 themes folder. (You will nee
 root permission for the copy)
 
 ```
-$ git clone https://github.com/jelenis/greeter.js.git
+$ git clone https://github.com/jelenis/LoginManager.js.git
 # cp -r lightdm-theme /usr/share/lightdm-webkit/themes/
 ```
 
-Lastly, set the value of theme in `/etc/lightdm/lightdm-webkit2-greeter.conf` to greeter.js
+Lastly, set the value of theme in `/etc/lightdm/lightdm-webkit2-greeter.conf` to LoginManager.js
 
 ```
 [greeter]
 ...
-webkit_theme = greeter.js
+webkit_theme = LoginManager.js
 ```
+
+## Screenshots
+![](doc/example_01.png)
+
+![](doc/example_04.png)
+
 ## Usage
 ### Basic Usage
 See [theme.js](js/theme.js) and [theme.css](css/theme.css) for basic usage.
