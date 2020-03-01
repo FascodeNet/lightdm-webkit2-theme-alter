@@ -20,7 +20,7 @@
 text=[]
 if (window.navigator.language === "en" || window.navigator.language === "en-US" ||window.navigator.language === "en-GB" ||window.navigator.language === "en-CA" ||window.navigator.language === "en-AU" ||window.navigator.language === "es-ES" ) {
   text[0]="Press any key to login"
-  text[1]="Welcome Back"
+  text[1]="WELCOME BACK"
   text[2]="Select Session"
   text[3]="User"
   text[4]="Password"
