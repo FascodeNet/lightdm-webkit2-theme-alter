@@ -35,9 +35,6 @@ else {
 document.onkeydown = function (e){
   document.getElementById("inputPassword").focus();
 };
-selectSession = LocalStorage.getItem('access_count');
-selectSession = window.LocalStorage.getItem('access_count');
-selectSession = LocalStorage.access_count
 
 class SplashScreen {
   constructor() {

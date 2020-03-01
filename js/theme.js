@@ -18,19 +18,8 @@ const greeter = new LoginManager();
 // called after greeter and lightdm are initialized
 $(greeter).on("ready", function(e) {
 
-	var selectSession = $("#selectSession");
-	// データの保存
-	LocalStorage.setItem('access_count', selectSession);
-	window.LocalStorage.setItem('access_count', selectSession);
-	LocalStorage.access_count = selectSession
-	// ロードの保存
-	selectSession = LocalStorage.getItem('access_count');
-	selectSession = window.LocalStorage.getItem('access_count');
-	selectSession = LocalStorage.access_count
-
-
 	let $user = $("#selectUser");
-	let $session = selectSession;
+	let $session = $("#selectSession");
 	let $password = $("#inputPassword");
 
 
