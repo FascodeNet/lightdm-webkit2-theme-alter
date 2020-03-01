@@ -8,8 +8,7 @@ body {
   min-height: 100vh;
   flex-direction: column;
   color: white;
-  background-color: #34495e;
-  /* background: radial-gradient(center, ellipse cover, #455a64 10%, #263238 100%); */
+  background-color: #0b2d49;
   overflow: hidden;
 }
 main {

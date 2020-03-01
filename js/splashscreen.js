@@ -32,26 +32,26 @@ class SplashScreen {
       "img": false,
       "content": {
         "clock": [{
-          "format": "dddd, MMMM Do",
-          "css": {
-            "color": "white"
-          },
-          "parent-css": {
-            "margin-top": "calc(20vh - 70pt)",
-            "text-align": "center",
-            "font-size": "70pt",
-            "font-family": "Noto Sans",
-            "font-weight": "lighter",
-            "text-shadow": "rgba(0, 0, 0, 0.25) 0px 3px 3px",
-          }
-        },{
+        //   "format": "dddd, MMMM Do",
+        //   "css": {
+        //     "color": "white"
+        //   },
+        //   "parent-css": {
+        //     "margin-top": "calc(20vh - 70pt)",
+        //     "text-align": "center",
+        //     "font-size": "70pt",
+        //     "font-family": "Noto Sans",
+        //     "font-weight": "lighter",
+        //     "text-shadow": "rgba(0, 0, 0, 0.25) 0px 3px 3px",
+        //   }
+        // },{
           "format": ["h:mm", "A"],
           "css": [
             {"font-size": "65pt", "font-weight": 200 },
             {"font-size": "30pt", "font-weight": "lighter", "margin-left": "10pt"}
           ],
           "parent-css": {
-            "margin-top": "20vh",
+            "margin-top": "40vh",
             "color": "white",
             "font-family": "Noto Sans",
             "text-align": "center",
@@ -60,7 +60,7 @@ class SplashScreen {
         }],
 
         "html": [{
-          "html":"<text style='display: none' class='active-appear'>Press any key to login</text>",
+          "html":"<text style='display: none' class='active-appear'>任意のキーを押すとログインできます。</text>",
           "css": {
             "margin-top": "5vh",
             "font-weight": "200",
