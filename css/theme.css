@@ -10,6 +10,7 @@ body {
   color: white;
   background-color: #0b2d49;
   overflow: hidden;
+  font-family: sans-serif;
 }
 main {
   flex: 1 0 auto;
@@ -57,5 +58,6 @@ div#console .terminal text {
   height: 10vh;
 }
 .logo-alter {
-  height: 15vh;
+  width: 50%;
+  height: auto;
 }
