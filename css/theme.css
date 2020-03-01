@@ -65,6 +65,9 @@ input {
   margin: 0 auto 30px;
 }
 .col.right{
+  position: fixed;
+  right: 10px;
+  bottom: 20px;
   height: 25px;
 }
 .col.right .row{
