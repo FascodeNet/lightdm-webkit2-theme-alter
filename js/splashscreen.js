@@ -68,7 +68,7 @@ class SplashScreen {
           "parent-css": {
             "margin-top": "40vh",
             "color": "white",
-            "font-family": "Noto Sans",
+            "font-family": "MyFont",
             "text-align": "center",
             "text-shadow": "rgba(0, 0, 0, 0.25) 0px 3px 3px",
           }

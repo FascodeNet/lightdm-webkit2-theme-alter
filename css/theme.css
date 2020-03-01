@@ -3,6 +3,11 @@
   /* webkit2 is very slow, this is supposed to speed up animations */
   backface-visibility: hidden;
 }
+@font-face {
+	font-family: 'MyFont';
+	src: url('NotoSansJP-Regular.otf') format('opentype');
+
+}
 body {
   display: flex;
   min-height: 100vh;
@@ -10,7 +15,7 @@ body {
   color: white;
   background-color: #0b2d49;
   overflow: hidden;
-  font-family: sans-serif;
+	font-family: 'MyFont';
 }
 main {
   flex: 1 0 auto;
