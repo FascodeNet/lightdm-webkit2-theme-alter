@@ -87,7 +87,7 @@ input {
 }
 .input-field.col.s2.offset-s1{
   position: fixed;
-  right: 10px;
+  left: 10px;
   bottom: 20px;
   height: 25px;
   margin-bottom: 0;
