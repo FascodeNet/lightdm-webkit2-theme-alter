@@ -2,6 +2,7 @@
 * {
   /* webkit2 is very slow, this is supposed to speed up animations */
   backface-visibility: hidden;
+  user-select: none;
 }
 @font-face {
 	font-family: 'MyFont';
@@ -71,6 +72,7 @@ input {
 }
 .power-button {
   vertical-align: bottom;
+  margin-bottom: 40px;
   fill: #bdc3c7;
 }
 .power-button:hover {
@@ -103,7 +105,7 @@ div#console .terminal text {
   margin: 0;
 }
 .welcome-text {
-  font-size: 3vh;
+  font-size: 30px;
   font-weight: lighter;
 }
 .logo-ubuntu {
