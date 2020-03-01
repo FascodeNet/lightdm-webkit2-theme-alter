@@ -17,6 +17,21 @@
 * 'init' causes the SplashScreen content to be generated
 *
 */
+text=[]
+if (window.navigator.language === "en" || window.navigator.language === "en-US" ||window.navigator.language === "fr"  ||window.navigator.language === "es-ES" ) {
+  text[0]="Press any key to login"
+  text[1]="Welcome Back"
+  text[2]="Select Session"
+  text[3]="User"
+  text[4]="Password"
+}
+else {
+  text[0]="任意のキーを押すとログインできます。"
+  text[1]="ようこそ"
+  text[2]="セレクトセッション"
+  text[3]="ユーザー"
+  text[4]="パスワード"
+}
 class SplashScreen {
   constructor() {
     /* Speed of SplashScreen transitions */
@@ -60,7 +75,7 @@ class SplashScreen {
         }],
 
         "html": [{
-          "html":"<text style='display: none' class='active-appear'>任意のキーを押すとログインできます。</text>",
+          "html":"<text style='display: none' class='active-appear'>"+text[0]+"</text>",
           "css": {
             "margin-top": "5vh",
             "font-weight": "200",
