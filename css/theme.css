@@ -9,8 +9,20 @@
 
 }
 .gaussfade-out{
-  transition: ease 3s;
-  filter: blur(100px);
+  animation: rotation 2s ease 0s 1 alternate none running;
+}
+@keyframes rotation {
+  0% {
+    filter: blur(0px);
+  }
+
+  50% {
+    filter: blur(100px);
+  }
+
+  100% {
+    filter: blur(0px);
+  }
 }
 body {
   display: flex;
@@ -44,10 +56,21 @@ main {
 input {
   color: white;
 }
+
 .caret {
   fill: grey !important;
 }
+.row{
+  margin: 0 auto 30px;
+}
+.col.right{
+  height: 25px;
+}
+.col.right .row{
+  margin: 0;
+}
 .power-button {
+  vertical-align: bottom;
   fill: #bdc3c7;
 }
 .power-button:hover {
@@ -56,6 +79,9 @@ input {
 .power-button:active {
   fill: white;
   transform: scale(0.95);
+}
+.input-field.col.s2.offset-s1{
+  margin-bottom: 20px;
 }
 div#console {
   z-index: 9999;
