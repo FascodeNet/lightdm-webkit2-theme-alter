@@ -5,10 +5,15 @@
   z-index: 999;
   overflow: hidden;
   background-color: #e57373;
-/* #009aff 
-#005498 
-#006eff  */
+
   background: linear-gradient(180deg, #0b4c81 30%,#005498 70%);
+  background-image: url("../images/LOCKSCREEN1920.png");
+
+  /* background-repeat:  no-repeat;                     */
+  background-position:center center;        
+  background-size:contain;                   
+  width:100%;     
+  height:100vh;      
 }
 #splashscreen * {
   overflow: hidden;
