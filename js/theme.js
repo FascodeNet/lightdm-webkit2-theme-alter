@@ -51,9 +51,11 @@ $(greeter).on("ready", function(e) {
 		/* Attempt authentication, 'grant' event will be emitted on sucecss
 		and 'deny' will be emitted on failure */
 		if (e.keyCode == 13) {
-			let username = $user.children("option:selected").val();
-			let pass = $password.val();
-			greeter.auth(username, pass);
+			if(!$(this).val() == ""){
+				let username = $user.children("option:selected").val();
+				let pass = $password.val();
+				greeter.auth(username, pass);
+			}
 		}
 
 	});
