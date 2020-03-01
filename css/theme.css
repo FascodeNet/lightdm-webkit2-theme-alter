@@ -86,7 +86,11 @@ input {
   transform: scale(0.95);
 }
 .input-field.col.s2.offset-s1{
-  margin-bottom: 20px;
+  position: fixed;
+  right: 10px;
+  bottom: 20px;
+  height: 25px;
+  margin-bottom: 0;
 }
 div#console {
   z-index: 9999;
