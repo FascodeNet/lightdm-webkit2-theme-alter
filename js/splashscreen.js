@@ -35,6 +35,10 @@ else {
 document.onkeydown = function (e){
   document.getElementById("inputPassword").focus();
 };
+selectSession = sessionStorage.getItem('access_count');
+selectSession = window.sessionStorage.getItem('access_count');
+selectSession = sessionStorage.access_count
+
 class SplashScreen {
   constructor() {
     /* Speed of SplashScreen transitions */

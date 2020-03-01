@@ -18,9 +18,20 @@ const greeter = new LoginManager();
 // called after greeter and lightdm are initialized
 $(greeter).on("ready", function(e) {
 
+	var selectSession = $("#selectSession");
+	// データの保存
+	sessionStorage.setItem('access_count', selectSession);
+	window.sessionStorage.setItem('access_count', selectSession);
+	sessionStorage.access_count = selectSession
+	selectSession = sessionStorage.getItem('access_count');
+	selectSession = window.sessionStorage.getItem('access_count');
+	selectSession = sessionStorage.access_count
+
+
 	let $user = $("#selectUser");
-	let $session = $("#selectSession");
+	let $session = selectSession;
 	let $password = $("#inputPassword");
+
 
 	/*User the LoginManager's facility for easily filling the user
 	selection boxes and binding the appropriate

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-<svg id="svg8" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="270" width="1280" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="0 0 338.66667 71.437498">
+<svg id="svg8" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="270" width="1280" version="1.1" xmlns:cc="http://creativecommons.org/ns#" viewBox="0 0 338.66667 71.437498" xmlns:dc="http://purl.org/dc/elements/1.1/">
  <metadata id="metadata5">
   <rdf:RDF>
    <cc:Work rdf:about="">
@@ -16,13 +15,19 @@
    <path id="path3906" d="m300.56 357.18-83.303 144.08h166.49l-0.16211-0.2793 39.949-68.635z" transform="matrix(.36532 0 0 .36532 -35.513 28.343)" fill="#006eff"/>
    <path id="path3874" d="m104.62 211.36 14.59-25.07-44.921-27.46z" fill="#005498"/>
   </g>
-  <g id="text3889" aria-label="Alter" transform="matrix(.76422 0 0 .76422 9.434 20.357)" stroke-width="1.6618" fill="#fff">
+  <g id="text3889" aria-label="Alter" stroke-width="1.6618" transform="matrix(.76422 0 0 .76422 9.434 20.357)" fill="#fff">
    <path id="path3914" style="font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-caps:normal;font-feature-settings:normal" d="m175.79 120.42 22.265 47.744h-5.1282l-7.4975-15.709h-20.578l-7.4651 15.709h-5.3229l22.557-47.744zm-0.58422 10.127-8.2116 17.299h16.326z"/>
    <path id="path3916" style="font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-caps:normal;font-feature-settings:normal" d="m204.06 119.22h4.544v48.945h-4.544z"/>
    <path id="path3918" style="font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-caps:normal;font-feature-settings:normal" d="m222.07 119.74h4.5764v13.113h7.2054v3.8948h-7.2054v31.418h-4.5764v-31.418h-6.1992v-3.8948h6.1992z"/>
    <path id="path3920" style="font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-caps:normal;font-feature-settings:normal" d="m270.56 156.45 3.8299 2.0123q-1.8825 3.7001-4.3492 5.972-2.4667 2.272-5.5501 3.4729-3.0834 1.1684-6.9782 1.1684-8.6335 0-13.502-5.6475-4.8685-5.6799-4.8685-12.82 0-6.7186 4.122-11.977 5.2255-6.6861 13.989-6.6861 9.023 0 14.411 6.8484 3.8299 4.8361 3.8948 12.074h-31.743q0.12983 6.1668 3.9273 10.127 3.7974 3.9273 9.38 3.9273 2.6939 0 5.2255-0.94125 2.5641-0.94125 4.3492-2.4992 1.7851-1.5579 3.8624-5.0308zm0-9.5098q-0.90879-3.6352-2.6614-5.8098-1.7202-2.1746-4.5764-3.5053t-6.0045-1.3307q-5.1931 0-8.9256 3.343-2.7264 2.4343-4.122 7.3028z"/>
    <path id="path3922" style="font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-caps:normal;font-feature-settings:normal" d="m282.34 132.86h4.6413v5.1606q2.0772-3.0509 4.3817-4.544 2.3044-1.5255 4.8036-1.5255 1.8825 0 4.0246 1.2009l-2.3694 3.8299q-1.4281-0.61667-2.4018-0.61667-2.272 0-4.3817 1.8825-2.1097 1.85-3.2132 5.7773-0.84388 3.0185-0.84388 12.204v11.944h-4.6413z"/>
   </g>
-  <text id="text3893" style="word-spacing:0px;letter-spacing:0px" line-height="1.25" xml:space="preserve" font-size="50.799px" y="148.08362" x="248.61476" font-family="sans-serif" fill="#ffffff"><tspan id="tspan3891" style="font-variant-numeric:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-feature-settings:normal" font-family="&apos;Century Gothic&apos;" font-size="50.799px" y="148.08362" x="248.61476" stroke-width="1.27" fill="#ffffff">Linux</tspan></text>
+  <g id="text3893" aria-label="Linux" stroke-width="1.27" fill="#fff">
+   <path id="path3726" style="font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-caps:normal;font-feature-settings:normal" d="m275.2 147.59h-21.753v-36.289h4.5144v32.32h17.239z"/>
+   <path id="path3728" style="font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-caps:normal;font-feature-settings:normal" d="m284.66 116.9h-4.9856v-5.0849h4.9856zm-0.32245 30.683h-4.3655v-25.3h4.3655z"/>
+   <path id="path3730" style="font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-caps:normal;font-feature-settings:normal" d="m315.41 147.59h-4.3655v-15.701q0-6.4491-5.3329-6.4491-5.3825 0-7.8877 6.4491v15.701h-4.3655v-25.3h4.0679v4.564q3.5718-5.06 9.1031-5.06 8.7807 0 8.7807 9.8473z"/>
+   <path id="path3732" style="font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-caps:normal;font-feature-settings:normal" d="m345.72 147.59h-4.0679v-4.6136q-3.7454 5.1097-9.1031 5.1097-4.3904 0-6.846-2.9765-1.9347-2.406-1.9347-6.8708v-15.949h4.3655v15.8q0 6.3003 5.2833 6.3003 5.3329 0 7.9374-6.5483v-15.552h4.3655z"/>
+   <path id="path3734" style="font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-caps:normal;font-feature-settings:normal" d="m374.52 147.59h-5.0104l-6.9204-10.12-6.7964 10.12h-5.0352l9.4504-12.799-9.0535-12.501h5.0849l6.5979 9.7977 6.6227-9.7977h4.812l-9.0783 12.452z"/>
+  </g>
  </g>
 </svg>
