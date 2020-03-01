@@ -1,48 +1,33 @@
-{
-	"fit": true,
-	"filter": false,
-	"vignette": true,
-	"active-timeout": 15,
-	"img": false,
-	"transition": "fade",
-	"content": {
-		"clock": [{
-			"format": "dddd, MMMM Do",
-			"css": {
-				"color": "white"
-			},
-			"parent-css": {
-				"margin-top": "calc(20vh - 70pt)",
-				"text-align": "center",
-				"font-size": "70pt",
-				"font-family": "Noto Sans",
-				"font-weight": "lighter",
-				"text-shadow": "rgba(0, 0, 0, 0.5) 0px 3px 3px",
-			}
-    },{
-			"format": ["h:mm", "A"],
-			"css": [
-				{"font-size": "65pt", "font-weight": 200 },
-				{"font-size": "30pt", "font-weight": "lighter", "margin-left": "10pt"}
-			],
-			"parent-css": {
-				"margin-top": "20vh",
-				"color": "white",
-				"font-family": "Noto Sans",
-				"text-align": "center",
-				"text-shadow": "rgba(0, 0, 0, 0.25) 0px 3px 3px",
-			}
-		}],
-
-		"html": [{
-			"html":"<text style='display: none' class='active-appear'>Press any key to login</text>",
-			"css": {
-				"margin-top": "5vh",
-				"font-weight": "200",
-				"font-size": "23pt",
-				"text-align": "center",
-				"color": "rgba(0, 0, 0, 0.25) 0px 5px 5px"
-			}
-		}]
+"fit": true,
+"filter": false,
+"vignette": true,
+"active-timeout": 15,
+"transition": "fade",
+"img": false,
+"content": {
+  "clock": [{
+	"format": ["h:mm", "A"],
+	"css": [
+	  {"font-size": "65pt", "font-weight": 200 },
+	  {"font-size": "30pt", "font-weight": "lighter", "margin-left": "10pt"}
+	],
+	"parent-css": {
+	  "margin-top": "40vh",
+	  "color": "white",
+	  "font-family": "Noto Sans",
+	  "text-align": "center",
+	  "text-shadow": "rgba(0, 0, 0, 0.25) 0px 3px 3px",
 	}
+  }],
+  "html": [{
+	"html":"<text style='display: none' class='active-appear'>任意のキーを押すとログインできます。</text>",
+	"css": {
+	  "margin-top": "5vh",
+	  "font-weight": "200",
+	  "font-size": "23pt",
+	  "text-align": "center",
+	  "color": "rgba(255, 255, 255, 0.8)"
+	}
+  }]
 }
+};
