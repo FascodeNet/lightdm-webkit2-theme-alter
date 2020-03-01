@@ -22,6 +22,7 @@ $(greeter).on("ready", function(e) {
 	let $session = $("#selectSession");
 	let $password = $("#inputPassword");
 
+
 	/*User the LoginManager's facility for easily filling the user
 	selection boxes and binding the appropriate
 	listeners needed by materialize */

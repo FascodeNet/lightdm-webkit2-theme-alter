@@ -5,9 +5,15 @@
   z-index: 999;
   overflow: hidden;
   background-color: #e57373;
-  background: linear-gradient(45deg, rgba(255,206,202,1) 1%,rgba(227,110,201,1) 84%);
-  background: linear-gradient(45deg, rgba(135,165,255,1) 1%,rgba(91,247,231,1) 84%);
-  background: linear-gradient(45deg, rgba(135,165,255,1) 0%,rgba(255,196,211,1) 58%,rgba(195,247,231,1) 87%,rgba(91,247,231,1) 110%);
+
+  background: linear-gradient(180deg, #0b4c81 30%,#005498 70%);
+  background-image: url("../images/LOCKSCREEN1920.png");
+
+  /* background-repeat:  no-repeat;                     */
+  background-position:center center;        
+  background-size:contain;                   
+  width:100%;     
+  height:100vh;      
 }
 #splashscreen * {
   overflow: hidden;

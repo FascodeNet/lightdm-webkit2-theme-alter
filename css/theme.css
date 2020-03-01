@@ -3,14 +3,19 @@
   /* webkit2 is very slow, this is supposed to speed up animations */
   backface-visibility: hidden;
 }
+@font-face {
+	font-family: 'MyFont';
+	src: url('NotoSansJP-Regular.otf') format('opentype');
+
+}
 body {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
   color: white;
-  background-color: #34495e;
-  /* background: radial-gradient(center, ellipse cover, #455a64 10%, #263238 100%); */
+  background-color: #0b2d49;
   overflow: hidden;
+	font-family: 'MyFont';
 }
 main {
   flex: 1 0 auto;
@@ -58,5 +63,6 @@ div#console .terminal text {
   height: 10vh;
 }
 .logo-alter {
-  height: 15vh;
+  width: 70%;
+  height: auto;
 }

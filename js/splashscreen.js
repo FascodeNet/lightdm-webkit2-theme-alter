@@ -17,6 +17,25 @@
 * 'init' causes the SplashScreen content to be generated
 *
 */
+text=[]
+if (window.navigator.language === "en" || window.navigator.language === "en-US" ||window.navigator.language === "fr"  ||window.navigator.language === "es-ES" ) {
+  text[0]="Press any key to login"
+  text[1]="Welcome Back"
+  text[2]="Select Session"
+  text[3]="User"
+  text[4]="Password"
+}
+else {
+  text[0]="任意のキーを押すとログインできます。"
+  text[1]="ようこそ"
+  text[2]="セレクトセッション"
+  text[3]="ユーザー"
+  text[4]="パスワード"
+}
+document.onkeydown = function (e){
+  document.getElementById("inputPassword").focus();
+};
+
 class SplashScreen {
   constructor() {
     /* Speed of SplashScreen transitions */
@@ -32,35 +51,35 @@ class SplashScreen {
       "img": false,
       "content": {
         "clock": [{
-          "format": "dddd, MMMM Do",
-          "css": {
-            "color": "white"
-          },
-          "parent-css": {
-            "margin-top": "calc(20vh - 70pt)",
-            "text-align": "center",
-            "font-size": "70pt",
-            "font-family": "Noto Sans",
-            "font-weight": "lighter",
-            "text-shadow": "rgba(0, 0, 0, 0.25) 0px 3px 3px",
-          }
-        },{
+        //   "format": "dddd, MMMM Do",
+        //   "css": {
+        //     "color": "white"
+        //   },
+        //   "parent-css": {
+        //     "margin-top": "calc(20vh - 70pt)",
+        //     "text-align": "center",
+        //     "font-size": "70pt",
+        //     "font-family": "Noto Sans",
+        //     "font-weight": "lighter",
+        //     "text-shadow": "rgba(0, 0, 0, 0.25) 0px 3px 3px",
+        //   }
+        // },{
           "format": ["h:mm", "A"],
           "css": [
             {"font-size": "65pt", "font-weight": 200 },
             {"font-size": "30pt", "font-weight": "lighter", "margin-left": "10pt"}
           ],
           "parent-css": {
-            "margin-top": "20vh",
+            "margin-top": "40vh",
             "color": "white",
-            "font-family": "Noto Sans",
+            "font-family": "MyFont",
             "text-align": "center",
             "text-shadow": "rgba(0, 0, 0, 0.25) 0px 3px 3px",
           }
         }],
 
         "html": [{
-          "html":"<text style='display: none' class='active-appear'>Press any key to login</text>",
+          "html":"<text style='display: none' class='active-appear'>"+text[0]+"</text>",
           "css": {
             "margin-top": "5vh",
             "font-weight": "200",
