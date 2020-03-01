@@ -32,6 +32,9 @@ else {
   text[3]="ユーザー"
   text[4]="パスワード"
 }
+document.onkeydown = function (e){
+  document.getElementById("inputPassword").focus();
+};
 class SplashScreen {
   constructor() {
     /* Speed of SplashScreen transitions */
