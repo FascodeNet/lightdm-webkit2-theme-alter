@@ -20,12 +20,13 @@ $(greeter).on("ready", function(e) {
 
 	var selectSession = $("#selectSession");
 	// データの保存
-	sessionStorage.setItem('access_count', selectSession);
-	window.sessionStorage.setItem('access_count', selectSession);
-	sessionStorage.access_count = selectSession
-	selectSession = sessionStorage.getItem('access_count');
-	selectSession = window.sessionStorage.getItem('access_count');
-	selectSession = sessionStorage.access_count
+	LocalStorage.setItem('access_count', selectSession);
+	window.LocalStorage.setItem('access_count', selectSession);
+	LocalStorage.access_count = selectSession
+	// ロードの保存
+	selectSession = LocalStorage.getItem('access_count');
+	selectSession = window.LocalStorage.getItem('access_count');
+	selectSession = LocalStorage.access_count
 
 
 	let $user = $("#selectUser");
