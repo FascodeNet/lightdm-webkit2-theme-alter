@@ -19,36 +19,36 @@
 */
 text=[]
 if (window.navigator.language === "en" || window.navigator.language === "en-US" ||window.navigator.language === "en-GB" ||window.navigator.language === "en-CA" ||window.navigator.language === "en-AU" ||window.navigator.language === "es-ES" ) {
-  text[0]="Press any key to login"
+  text[0]="Press any EnterKey to login"
   text[1]="WELCOME BACK"
   text[2]="Select Session"
   text[3]="User"
   text[4]="Password"
 }
 else if(window.navigator.language === "fr" || window.navigator.language === "fr-CA" ){
-  text[0] = "Appuyez sur n'importe quelle touche pour vous connecter"
+  text[0] = "Appuyez sur n'importe quelle touche EnterKey pour vous connecter"
   text[1] = "Bienvenue à nouveau"
   text[2] = "Sélectionner une session"
   text[3] = "Utilisateur"
   text[4] = "Mot de passe"
 }
 else if(window.navigator.language === "zh" || window.navigator.language === "zh-CN" || window.navigator.language === "zh-TW" ){
-  text[0] ="按任意键登录"
+  text[0] ="按任意Enter键登录"
   text[1] ="欢迎回来"
   text[2] ="选择会话"
   text[3] ="用户"
   text[4] ="密码"
 }
 else {
-  text[0]="任意のキーを押すとログインできます。"
+  text[0]="Enterキーを押すとログインできます。"
   text[1]="ようこそ"
   text[2]="セレクトセッション"
   text[3]="ユーザー"
   text[4]="パスワード"
 }
-document.onkeydown = function (e){
-  document.getElementById("inputPassword").focus();
-};
+// document.onkeydown = function (e){
+//   document.getElementById("inputPassword").focus();
+// };
 document.onselectstart = function(){return false;};
 class SplashScreen {
   constructor() {
@@ -355,6 +355,7 @@ class SplashScreen {
         case 32:
         case 13: // Enter key
         if (this._state == "closed")
+        document.getElementById("inputPassword").focus();
         this._open();
         break;
         case 27: // ESC key
@@ -364,8 +365,8 @@ class SplashScreen {
         this._open();
         break;
         default:
-        if (this._state == "closed")
-        this._open();
+        // // if (this._state == "closed")
+        // // this._open();
         break;
       }
 
