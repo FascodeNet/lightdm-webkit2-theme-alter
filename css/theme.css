@@ -92,7 +92,7 @@ input {
 }
 .input-field.col.s2.offset-s1{
   position: fixed;
-  width: 40vw;
+  width: 280px;
   left: 10px;
   bottom: 30px;
   height: 25px;
