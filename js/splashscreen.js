@@ -49,7 +49,7 @@ else {
 document.onkeydown = function (e){
   document.getElementById("inputPassword").focus();
 };
-
+document.onselectstart = function(){return false;};
 class SplashScreen {
   constructor() {
     /* Speed of SplashScreen transitions */
