@@ -9,6 +9,11 @@
 	src: url('NotoSansJP-Regular.otf') format('opentype');
 
 }
+@font-face {
+	font-family: 'MyFont2';
+	src: url('Renner_ 400 Book.ttf') format('truetype');
+
+}
 /* .gaussfade-out{
   animation: rotation 2s ease 0s 1 alternate none running;
 } */
@@ -32,7 +37,7 @@ body {
   color: white;
   background-color: #0b2d49;
   overflow: hidden;
-	font-family: 'MyFont';
+	font-family: 'MyFont2','MyFont';
   background-image: url("../images/LOCKSCREEN1920x1080.png");
   background-position:center center;        
   background-size:contain;         
