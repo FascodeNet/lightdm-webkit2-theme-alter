@@ -50,6 +50,7 @@ else {
 //   document.getElementById("inputPassword").focus();
 // };
 document.onselectstart = function(){return false;};
+document.ondragstart = function(){return false;};
 class SplashScreen {
   constructor() {
     /* Speed of SplashScreen transitions */
