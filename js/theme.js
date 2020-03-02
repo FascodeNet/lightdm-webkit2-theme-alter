@@ -84,5 +84,5 @@ $(greeter).on("ready", function(e) {
 	/* Once everything else has loaded, its  safe to remove the black screen
 	hiding the dom. Do it async so that all currently running async
 	functions have a chance to complete */
-	// setTimeout(() => $cover.fadeOut(), dur=1);
+	setTimeout(() => $cover.fadeOut(), dur=1);
 });
