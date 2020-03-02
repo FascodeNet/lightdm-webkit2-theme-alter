@@ -361,10 +361,14 @@ class SplashScreen {
         this._open();
         break;
         case 27: // ESC key
-        if (this._state == "open")
-        this._close();
-        else if (this._state == "closed")
-        this._open();
+        if (this._state == "open"){
+        if(document.activeElement){
+          document.activeElement.blur();
+        }
+        this._close();}
+        else if (this._state == "closed"){
+        document.getElementById("inputPassword").focus();
+        this._open();}
         break;
         default:
         // // if (this._state == "closed")
