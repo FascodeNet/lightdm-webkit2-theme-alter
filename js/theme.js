@@ -65,7 +65,7 @@ $(greeter).on("ready", function(e) {
 	$(greeter).on("grant", () => {
 		let session_key = $session.children("option:selected").val();
 
-		$cover.fadeIn("slow", () => greeter.login(session_key));
+		// $cover.fadeIn("slow", () => greeter.login(session_key));
 	})
 	.on("deny", () => {
 		// inform the user that the credentials are invalid
@@ -84,5 +84,5 @@ $(greeter).on("ready", function(e) {
 	/* Once everything else has loaded, its  safe to remove the black screen
 	hiding the dom. Do it async so that all currently running async
 	functions have a chance to complete */
-	setTimeout(() => $cover.fadeOut(), dur=1);
+	// setTimeout(() => $cover.fadeOut(), dur=1);
 });
