@@ -97,7 +97,7 @@ class SplashScreen {
           "css": {
             "margin-top": "40vh",
             "font-weight": "200",
-            "font-size": "18pt",
+            "font-size": "12pt",
             "text-align": "center",
             "color": "rgba(255, 255, 255, 0.8)"
           }
