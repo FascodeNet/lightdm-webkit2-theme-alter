@@ -52,7 +52,7 @@ $(greeter).on("ready", function(e) {
 		and 'deny' will be emitted on failure */
 		if (e.keyCode == 13) {
 			if(!$("#inputPassword").val() == ""){
-				$("body").addClass("gaussfade-out");
+				// $("body").addClass("gaussfade-out");
 				let username = $user.children("option:selected").val();
 				let pass = $password.val();
 				greeter.auth(username, pass);
@@ -71,7 +71,7 @@ $(greeter).on("ready", function(e) {
 		// inform the user that the credentials are invalid
 		$password.removeClass("valid").addClass("invalid");
 		$password.val("").prop("placeholder", "Incorrect Password");
-		setTimeout('$("body").removeClass("gaussfade-out")', 2000);
+		// setTimeout('$("body").removeClass("gaussfade-out")', 2000);
 	});
 
 	$(greeter.plugins.SplashScreen).on("active", function() {
