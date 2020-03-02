@@ -80,11 +80,11 @@ class SplashScreen {
         // },{
           "format": ["h:mm", "A"],
           "css": [
-            {"font-size": "65pt", "font-weight": 200 },
-            {"font-size": "30pt", "font-weight": "lighter", "margin-left": "10pt"}
+            {"font-size": "40pt", "font-weight": 200 },
+            {"font-size": "20pt", "font-weight": "lighter", "margin-left": "10pt"}
           ],
           "parent-css": {
-            "margin-top": "40vh",
+            "margin-top": "45vh",
             "color": "white",
             "font-family": "MyFont",
             "text-align": "center",
@@ -95,9 +95,9 @@ class SplashScreen {
         "html": [{
           "html":"<text style='display: none' class='active-appear'>"+text[0]+"</text>",
           "css": {
-            "margin-top": "5vh",
+            "margin-top": "40vh",
             "font-weight": "200",
-            "font-size": "23pt",
+            "font-size": "18pt",
             "text-align": "center",
             "color": "rgba(255, 255, 255, 0.8)"
           }
