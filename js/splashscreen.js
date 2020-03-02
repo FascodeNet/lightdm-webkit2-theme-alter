@@ -182,6 +182,7 @@ class SplashScreen {
     front end to implement spcific behaivours while the user is active */
     this.$el.click(() => {
       this._open();
+      document.getElementById("inputPassword").focus();
     }).mousemove((e) => {
       if (!this._isActive())
       $(this).trigger("active", e)
