@@ -9,9 +9,9 @@
 	src: url('NotoSansJP-Regular.otf') format('opentype');
 
 }
-.gaussfade-out{
+/* .gaussfade-out{
   animation: rotation 2s ease 0s 1 alternate none running;
-}
+} */
 @keyframes rotation {
   0% {
     filter: blur(0px);
