@@ -64,7 +64,7 @@ $(greeter).on("ready", function(e) {
 	// when the user is authenticated, do a transition and login
 	$(greeter).on("grant", () => {
 		let session_key = $session.children("option:selected").val();
-
+		greeter.login(session_key)
 		// $cover.fadeIn("slow", () => greeter.login(session_key));
 	})
 	.on("deny", () => {
