@@ -4,16 +4,19 @@
   backface-visibility: hidden;
   user-select: none;
 }
+/* 日本語のフォント */
 @font-face {
 	font-family: 'MyFont';
 	src: url('NotoSansJP-Regular.otf') format('opentype');
 
 }
+/* 英語のフォント */
 @font-face {
 	font-family: 'MyFont2';
 	src: url('Renner_ 400 Book.ttf') format('truetype');
 
 }
+/* 時計のフォント */
 @font-face {
 	font-family: 'MyFont3';
 	src: url('Lato-Regular.ttf') format('truetype');
@@ -52,7 +55,6 @@ body {
 body::before {
   content: '';
   position: absolute;
-  /* 輪郭がぼやけてしまうのでブラー範囲を広げる */
   top: -5px;
   bottom: -5px;
   left: -5px;
@@ -71,9 +73,9 @@ input {
 .caret {
   fill: grey !important;
 }
-.row{
-  /* margin: 0 auto 30px; */
-}
+/* .row{
+  margin: 0 auto 30px;
+} */
 .col.right{
   position: fixed;
   right: 10px;
