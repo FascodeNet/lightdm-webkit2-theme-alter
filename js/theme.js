@@ -44,7 +44,7 @@ $(greeter).on("ready", function(e) {
 	});
 
 	// Bind listener to the password box
-	$password.keypress((e) => {
+	$password.keydown((e) => {
 		// user has typed, remove placeholder and invalid class
 		$password.prop("placeholder", "").removeClass("invalid");
 
@@ -58,6 +58,11 @@ $(greeter).on("ready", function(e) {
 				greeter.auth(username, pass);
 			}
 		}
+		
+		else if (e.keyCode==65 && e.ctrlKey) {
+			$('#inputPassword').select();
+		}
+		console.log(e.ctrlKey);
 
 	});
 

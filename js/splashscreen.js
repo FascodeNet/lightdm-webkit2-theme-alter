@@ -359,6 +359,7 @@ class SplashScreen {
         case 13: // Enter key
         if (this._state == "closed")
         document.getElementById("inputPassword").focus();
+        $('#inputPassword').select();
         this._open();
         break;
         case 27: // ESC key
@@ -369,6 +370,7 @@ class SplashScreen {
         this._close();}
         else if (this._state == "closed"){
         document.getElementById("inputPassword").focus();
+        $('#inputPassword').select();
         this._open();}
         break;
         default:
