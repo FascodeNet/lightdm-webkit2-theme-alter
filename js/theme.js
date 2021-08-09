@@ -39,7 +39,7 @@ $(greeter).on("ready", function(e) {
 	$("#buttonRestart").click(function() {
 		greeter.restart();
 	});
-	$("#hibernate").click(function() {
+	$("#buttonHibernate").click(function() {
 		greeter.hibernate();
 	});
 
